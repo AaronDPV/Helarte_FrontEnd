@@ -1,0 +1,78 @@
+// SISTEMA DE DISEÑO 2D H-ELARTE (BLACK & WHITE SKETCH / COMIC ART)
+$font-title: 'Playfair Display', Georgia, serif;
+$font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+$font-mono: 'Space Mono', monospace;
+
+// Colores principales 2D
+$c-black: #000000;
+$c-white: #ffffff;
+$c-paper: #fafafa;
+$c-dark: #121212;
+$c-gray-100: #f4f4f5;
+$c-gray-200: #e4e4e7;
+$c-gray-500: #71717a;
+
+// Toques pastel del helado (Mona Lisa accents)
+$c-mint: #a2d9ce;
+$c-peach: #f9e79f;
+$c-pink: #f5b7b1;
+$c-accent-blue: #bae6fd;
+
+// Sombras duras 2D
+$shadow-2d: 5px 5px 0px $c-black;
+$shadow-2d-hover: 7px 7px 0px $c-black;
+$shadow-2d-active: 2px 2px 0px $c-black;
+$shadow-2d-sm: 3px 3px 0px $c-black;
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: $font-body;
+  background-color: $c-paper;
+  color: $c-black;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  overflow-x: hidden;
+
+  // Fondo sutil estilo boceto 2D
+  background-image: 
+    radial-gradient(#000000 0.75px, transparent 0.75px),
+    radial-gradient(#000000 0.75px, #fafafa 0.75px);
+  background-size: 30px 30px;
+  background-position: 0 0, 15px 15px;
+}
+
+// Tipografías
+h1, h2, h3, .font-serif {
+  font-family: $font-title;
+  color: $c-black;
+  letter-spacing: -0.5px;
+}
+
+.font-mono {
+  font-family: $font-mono;
+}
+
+// Scrollbar 2D
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #ffffff;
+  border-left: 2px solid #000000;
+}
+::-webkit-scrollbar-thumb {
+  background: #000000;
+  border: 2px solid #ffffff;
+}
+
+::selection {
+  background: #000000;
+  color: #ffffff;
+}

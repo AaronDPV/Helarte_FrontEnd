@@ -1,0 +1,715 @@
+<!-- ============================================== -->
+<!-- PANTALLA DE INICIO DE SESIÓN ELEGANTE 2D       -->
+<!-- ============================================== -->
+<div *ngIf="!api.currentUser" class="login-wrapper-2d">
+  <div class="login-card-2d">
+    <div class="login-header-2d">
+      <img src="assets/logo-helarte.png" alt="H-elarte Logo" class="login-logo-img" />
+      <div class="login-brand-tag">SISTEMA WEB 2D</div>
+      <h2>{{ modoRegistro ? 'Registro de Cliente' : 'Iniciar Sesión' }}</h2>
+      <p class="login-subtitle">Gestión de Reservas & Servicios de Heladería</p>
+    </div>
+
+    <!-- ALERTAS -->
+    <div *ngIf="mensajeError" class="login-alert alert-error">
+      <span>⚠ {{ mensajeError }}</span>
+    </div>
+    <div *ngIf="mensajeExito" class="login-alert alert-exito">
+      <span>✓ {{ mensajeExito }}</span>
+    </div>
+
+    <!-- FORMULARIO DE LOGIN -->
+    <form *ngIf="!modoRegistro" (ngSubmit)="iniciarSesion()" class="login-form-2d">
+      <div class="form-field-2d">
+        <label>Correo Electrónico:</label>
+        <input 
+          type="email" 
+          [(ngModel)]="loginForm.email" 
+          name="email" 
+          placeholder="ejemplo@helarte.com" 
+          class="input-2d" 
+          required 
+        />
+      </div>
+
+      <div class="form-field-2d">
+        <label>Contraseña:</label>
+        <input 
+          type="password" 
+          [(ngModel)]="loginForm.password" 
+          name="password" 
+          placeholder="••••••••" 
+          class="input-2d" 
+          required 
+        />
+      </div>
+
+      <button type="submit" class="btn-login-2d" [disabled]="cargandoLogin">
+        {{ cargandoLogin ? 'Validando credenciales...' : 'Ingresar al Panel' }}
+      </button>
+
+      <!-- ACCESOS RÁPIDOS DE PRUEBA -->
+      <div class="demo-accounts-box">
+        <span class="demo-title">Cuentas de demostración (1 clic):</span>
+        <div class="demo-buttons">
+          <button type="button" class="btn-demo" (click)="seleccionarCuentaDemo('admin@helarte.com', 'admin123')">
+            Admin
+          </button>
+          <button type="button" class="btn-demo" (click)="seleccionarCuentaDemo('empleado@helarte.com', 'empleado123')">
+            Empleado
+          </button>
+          <button type="button" class="btn-demo" (click)="seleccionarCuentaDemo('cliente@helarte.com', 'cliente123')">
+            Cliente
+          </button>
+        </div>
+      </div>
+
+      <div class="toggle-mode-box">
+        <span>¿Deseas una cuenta nueva?</span>
+        <button type="button" class="link-toggle" (click)="modoRegistro = true">Crear cuenta de cliente</button>
+      </div>
+    </form>
+
+    <!-- FORMULARIO DE REGISTRO CLIENTE -->
+    <form *ngIf="modoRegistro" (ngSubmit)="registrarCliente()" class="login-form-2d">
+      <div class="form-field-2d">
+        <label>Nombre y Apellidos:</label>
+        <input type="text" [(ngModel)]="registroForm.user" name="regUser" placeholder="Tu nombre" class="input-2d" required />
+      </div>
+
+      <div class="form-field-2d">
+        <label>Correo Electrónico:</label>
+        <input type="email" [(ngModel)]="registroForm.email" name="regEmail" placeholder="correo@gmail.com" class="input-2d" required />
+      </div>
+
+      <div class="form-field-2d">
+        <label>Contraseña:</label>
+        <input type="password" [(ngModel)]="registroForm.password" name="regPass" placeholder="Mínimo 6 caracteres" class="input-2d" required />
+      </div>
+
+      <div class="form-field-2d">
+        <label>Teléfono:</label>
+        <input type="text" [(ngModel)]="registroForm.telefono" name="regTel" placeholder="987654321" class="input-2d" />
+      </div>
+
+      <button type="submit" class="btn-login-2d">Registrarme e Ingresar</button>
+
+      <div class="toggle-mode-box">
+        <span>¿Ya tienes una cuenta?</span>
+        <button type="button" class="link-toggle" (click)="modoRegistro = false">Volver a Iniciar Sesión</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ============================================== -->
+<!-- PANEL DE ADMINISTRADOR (SOLO USUARIOS CON LOGIN) -->
+<!-- ============================================== -->
+<div *ngIf="api.currentUser" class="app-layout-2d">
+
+  <!-- SIDEBAR LATERAL -->
+  <aside class="sidebar-2d">
+    <div class="logo-box-2d">
+      <img src="assets/logo-helarte.png" alt="H-elarte Logo" class="logo-img-2d" />
+      <div class="tag-2d">DESDE EL 2023</div>
+      <p class="tagline-2d">ice cream, crepes & waffles</p>
+    </div>
+
+    <nav class="nav-menu-2d">
+      <button class="nav-item-2d" [class.activo]="seccionActiva === 'dashboard'" (click)="seccionActiva = 'dashboard'">
+        <span class="icon-2d">📊</span>
+        <span class="texto">Dashboard</span>
+      </button>
+
+      <button class="nav-item-2d" [class.activo]="seccionActiva === 'reservas'" (click)="seccionActiva = 'reservas'">
+        <span class="icon-2d">📅</span>
+        <span class="texto">Reservas</span>
+        <span class="badge-contador" *ngIf="reservasPendientes > 0">{{ reservasPendientes }}</span>
+      </button>
+
+      <button class="nav-item-2d" [class.activo]="seccionActiva === 'servicios'" (click)="seccionActiva = 'servicios'">
+        <span class="icon-2d">🍨</span>
+        <span class="texto">Servicios & Carta</span>
+      </button>
+
+      <button class="nav-item-2d" [class.activo]="seccionActiva === 'mesas'" (click)="seccionActiva = 'mesas'">
+        <span class="icon-2d">🪑</span>
+        <span class="texto">Mesas & Zonas</span>
+      </button>
+
+      <button *ngIf="esAdmin()" class="nav-item-2d" [class.activo]="seccionActiva === 'usuarios'" (click)="seccionActiva = 'usuarios'">
+        <span class="icon-2d">👥</span>
+        <span class="texto">Usuarios</span>
+      </button>
+    </nav>
+
+    <!-- FICHA DE SESIÓN -->
+    <div class="user-card-2d">
+      <div class="user-avatar-2d">
+        {{ api.currentUser.user.charAt(0) }}
+      </div>
+      <div class="user-info-2d">
+        <strong class="user-name">{{ api.currentUser.user }}</strong>
+        <span class="user-role-badge">{{ api.currentUser.rol }}</span>
+      </div>
+      <button class="btn-logout-2d" title="Cerrar sesión" (click)="cerrarSesion()">✕</button>
+    </div>
+  </aside>
+
+  <!-- CONTENIDO PRINCIPAL -->
+  <div class="main-content-2d">
+
+    <!-- CABECERA -->
+    <header class="topbar-2d">
+      <div class="topbar-left">
+        <h1 class="page-title-2d">
+          <span *ngIf="seccionActiva === 'dashboard'">Panel de Control</span>
+          <span *ngIf="seccionActiva === 'reservas'">Gestión de Reservas</span>
+          <span *ngIf="seccionActiva === 'servicios'">Catálogo de Servicios</span>
+          <span *ngIf="seccionActiva === 'mesas'">Mesas del Establecimiento</span>
+          <span *ngIf="seccionActiva === 'usuarios'">Administración de Usuarios</span>
+        </h1>
+        <div class="status-indicator-2d">
+          <span class="dot-online"></span>
+          <span>API REST Conectada (localhost:8080) &bull; MySQL Activo</span>
+        </div>
+      </div>
+
+      <div class="topbar-actions">
+        <button class="btn-2d btn-2d-black" (click)="modalReservaAbierto = true">
+          + Nueva Reserva
+        </button>
+        <button *ngIf="esAdmin() && seccionActiva === 'servicios'" class="btn-2d btn-2d-white" (click)="modalServicioAbierto = true">
+          + Agregar Servicio
+        </button>
+        <button *ngIf="esEmpleadoOAdmin() && seccionActiva === 'mesas'" class="btn-2d btn-2d-white" (click)="modalMesaAbierto = true">
+          + Agregar Mesa
+        </button>
+        <button *ngIf="esAdmin() && seccionActiva === 'usuarios'" class="btn-2d btn-2d-white" (click)="modalUsuarioAbierto = true">
+          + Nuevo Usuario
+        </button>
+      </div>
+    </header>
+
+    <!-- MENSAJES FLOTANTES -->
+    <div *ngIf="mensajeExito" class="toast-2d toast-exito">
+      <span>✓ {{ mensajeExito }}</span>
+    </div>
+    <div *ngIf="mensajeError" class="toast-2d toast-error">
+      <span>⚠ {{ mensajeError }}</span>
+    </div>
+
+    <!-- 1. DASHBOARD -->
+    <section *ngIf="seccionActiva === 'dashboard'" class="dashboard-view-2d">
+      <div class="kpi-grid-2d">
+        <div class="kpi-card-2d">
+          <div class="kpi-icon-wrap">📅</div>
+          <div class="kpi-data">
+            <span class="kpi-num">{{ totalReservas }}</span>
+            <span class="kpi-label">Reservas Totales</span>
+          </div>
+          <div class="kpi-sub">
+            <span class="kpi-chip chip-pendiente">{{ reservasPendientes }} pendientes</span>
+            <span class="kpi-chip chip-ok">{{ reservasConfirmadas }} activas</span>
+          </div>
+        </div>
+
+        <div class="kpi-card-2d">
+          <div class="kpi-icon-wrap">🪑</div>
+          <div class="kpi-data">
+            <span class="kpi-num">{{ mesasDisponibles }} / {{ mesasTotales }}</span>
+            <span class="kpi-label">Mesas Libres</span>
+          </div>
+          <div class="kpi-sub">
+            <span class="kpi-chip chip-ok">Capacidad lista</span>
+          </div>
+        </div>
+
+        <div class="kpi-card-2d">
+          <div class="kpi-icon-wrap">🍨</div>
+          <div class="kpi-data">
+            <span class="kpi-num">{{ servicios.length }}</span>
+            <span class="kpi-label">Servicios en Menú</span>
+          </div>
+          <div class="kpi-sub">
+            <span class="kpi-chip">Waffles, Crepes, Catas</span>
+          </div>
+        </div>
+
+        <div class="kpi-card-2d">
+          <div class="kpi-icon-wrap">👥</div>
+          <div class="kpi-data">
+            <span class="kpi-num">{{ usuarios.length }}</span>
+            <span class="kpi-label">Usuarios del Sistema</span>
+          </div>
+          <div class="kpi-sub">
+            <span class="kpi-chip">Registrados</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="dashboard-dual-2d">
+        <div class="card-panel-2d">
+          <div class="card-panel-header">
+            <h3>Últimas Reservas</h3>
+            <button class="btn-link-2d" (click)="seccionActiva = 'reservas'">Ver todas →</button>
+          </div>
+          <div class="table-responsive-2d">
+            <table class="tabla-2d">
+              <thead>
+                <tr>
+                  <th>Código</th>
+                  <th>Cliente</th>
+                  <th>Mesa</th>
+                  <th>Servicio</th>
+                  <th>Fecha & Hora</th>
+                  <th>Estado</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let r of reservas.slice(0, 5)">
+                  <td><span class="ticket-code-2d">{{ r.codigoReserva }}</span></td>
+                  <td><strong>{{ r.usuario.user }}</strong></td>
+                  <td>Mesa #{{ r.mesa.numeroMesa }}</td>
+                  <td>{{ r.servicio.nombre }}</td>
+                  <td>{{ r.fechaReserva }} {{ r.horaReserva }}</td>
+                  <td>
+                    <span class="badge-status-2d" [ngClass]="'status-' + r.estado.toLowerCase()">
+                      {{ r.estado }}
+                    </span>
+                  </td>
+                </tr>
+                <tr *ngIf="reservas.length === 0">
+                  <td colspan="6" class="text-center">No hay reservas registradas.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card-panel-2d">
+          <div class="card-panel-header">
+            <h3>Disponibilidad de Mesas</h3>
+            <button class="btn-link-2d" (click)="seccionActiva = 'mesas'">Ver todas →</button>
+          </div>
+          <div class="grid-mesas-mini">
+            <div *ngFor="let m of mesas" class="mesa-mini-card-2d" [class.mesa-ocupada]="m.estado !== 'DISPONIBLE'">
+              <div class="mesa-mini-num">Mesa {{ m.numeroMesa }}</div>
+              <div class="mesa-mini-zone">{{ m.ubicacion }}</div>
+              <div class="mesa-mini-cap">👤 {{ m.capacidad }} personas</div>
+              <span class="badge-status-2d" [class.status-disponible]="m.estado === 'DISPONIBLE'" [class.status-ocupada]="m.estado !== 'DISPONIBLE'">
+                {{ m.estado }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. RESERVAS -->
+    <section *ngIf="seccionActiva === 'reservas'" class="section-view-2d">
+      <div class="filter-bar-2d">
+        <div class="filter-group">
+          <label>Filtrar por estado:</label>
+          <div class="filter-pills">
+            <button class="pill-2d" [class.activo]="filtroEstadoReserva === 'TODAS'" (click)="filtroEstadoReserva = 'TODAS'">Todas ({{ totalReservas }})</button>
+            <button class="pill-2d" [class.activo]="filtroEstadoReserva === 'PENDIENTE'" (click)="filtroEstadoReserva = 'PENDIENTE'">Pendientes ({{ reservasPendientes }})</button>
+            <button class="pill-2d" [class.activo]="filtroEstadoReserva === 'CONFIRMADA'" (click)="filtroEstadoReserva = 'CONFIRMADA'">Confirmadas</button>
+            <button class="pill-2d" [class.activo]="filtroEstadoReserva === 'ATENDIDA'" (click)="filtroEstadoReserva = 'ATENDIDA'">Atendidas</button>
+            <button class="pill-2d" [class.activo]="filtroEstadoReserva === 'CANCELADA'" (click)="filtroEstadoReserva = 'CANCELADA'">Canceladas</button>
+          </div>
+        </div>
+
+        <div class="filter-actions">
+          <button class="btn-2d btn-2d-white" (click)="cargarReservas()">🔄 Actualizar</button>
+          <button class="btn-2d btn-2d-black" (click)="modalReservaAbierto = true">+ Crear Reserva</button>
+        </div>
+      </div>
+
+      <div class="card-panel-2d">
+        <div class="table-responsive-2d">
+          <table class="tabla-2d">
+            <thead>
+              <tr>
+                <th>Ticket</th>
+                <th>Cliente</th>
+                <th>Mesa & Zona</th>
+                <th>Servicio</th>
+                <th>Fecha & Hora</th>
+                <th>Comensales</th>
+                <th>Estado</th>
+                <th>Observaciones</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let r of reservasFiltradas">
+                <td><strong class="ticket-code-2d">{{ r.codigoReserva }}</strong></td>
+                <td>
+                  <div>{{ r.usuario.user }}</div>
+                  <small class="text-muted">{{ r.usuario.email }}</small>
+                </td>
+                <td>Mesa #{{ r.mesa.numeroMesa }} - {{ r.mesa.ubicacion }}</td>
+                <td>{{ r.servicio.nombre }}</td>
+                <td>{{ r.fechaReserva }} {{ r.horaReserva }}</td>
+                <td>👤 {{ r.cantidadPersonas }}</td>
+                <td>
+                  <span class="badge-status-2d" [ngClass]="'status-' + r.estado.toLowerCase()">
+                    {{ r.estado }}
+                  </span>
+                </td>
+                <td>{{ r.observaciones || '-' }}</td>
+                <td class="action-buttons-cell">
+                  <button *ngIf="esEmpleadoOAdmin() && r.estado === 'PENDIENTE'" class="btn-action-2d btn-confirmar" (click)="cambiarEstado(r.id, 'CONFIRMADA')">
+                    ✓ Confirmar
+                  </button>
+                  <button *ngIf="esEmpleadoOAdmin() && r.estado === 'CONFIRMADA'" class="btn-action-2d btn-atender" (click)="cambiarEstado(r.id, 'ATENDIDA')">
+                    ★ Atendida
+                  </button>
+                  <button *ngIf="r.estado !== 'CANCELADA' && r.estado !== 'ATENDIDA'" class="btn-action-2d btn-cancelar" (click)="cancelarReserva(r.id)">
+                    ✕ Cancelar
+                  </button>
+                </td>
+              </tr>
+              <tr *ngIf="reservasFiltradas.length === 0">
+                <td colspan="9" class="text-center py-4">No hay reservas con el filtro seleccionado.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. SERVICIOS -->
+    <section *ngIf="seccionActiva === 'servicios'" class="section-view-2d">
+      <div class="filter-bar-2d">
+        <div class="search-box-2d">
+          <input type="text" [(ngModel)]="busquedaServicio" placeholder="Buscar por nombre o descripción..." class="input-2d" />
+        </div>
+        <button *ngIf="esAdmin()" class="btn-2d btn-2d-black" (click)="modalServicioAbierto = true">
+          + Agregar a la Carta
+        </button>
+      </div>
+
+      <div class="menu-grid-2d">
+        <div *ngFor="let s of serviciosFiltrados" class="menu-card-2d">
+          <div class="menu-card-content">
+            <h3 class="menu-card-title">{{ s.nombre }}</h3>
+            <p class="menu-card-desc">{{ s.descripcion }}</p>
+            <div class="menu-card-meta">
+              <div class="meta-price">
+                <span class="currency">S/</span>
+                <span class="amount">{{ s.precio | number:'1.2-2' }}</span>
+              </div>
+              <div class="meta-duration">⏱ {{ s.duracionMinutos }} min</div>
+            </div>
+            <div class="menu-card-footer">
+              <span class="badge-status-2d" [class.status-disponible]="s.activo">
+                {{ s.activo ? 'ACTIVO' : 'INACTIVO' }}
+              </span>
+              <button *ngIf="esAdmin()" class="btn-action-2d btn-cancelar" (click)="eliminarServicio(s.id!)">
+                Eliminar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. MESAS -->
+    <section *ngIf="seccionActiva === 'mesas'" class="section-view-2d">
+      <div class="filter-bar-2d">
+        <div>
+          <h3>Mesas del Establecimiento</h3>
+          <p class="text-muted">Control de aforo y estado en sala</p>
+        </div>
+        <button *ngIf="esEmpleadoOAdmin()" class="btn-2d btn-2d-black" (click)="modalMesaAbierto = true">
+          + Registrar Mesa
+        </button>
+      </div>
+
+      <div class="mesas-full-grid-2d">
+        <div *ngFor="let m of mesas" class="mesa-card-2d" [class.mesa-nodisponible]="m.estado !== 'DISPONIBLE'">
+          <div class="mesa-card-header">
+            <span class="mesa-title">MESA {{ m.numeroMesa }}</span>
+            <span class="badge-status-2d" [class.status-disponible]="m.estado === 'DISPONIBLE'" [class.status-ocupada]="m.estado !== 'DISPONIBLE'">
+              {{ m.estado }}
+            </span>
+          </div>
+          <div class="mesa-sketch-visual">
+            <div class="table-circle-sketch">
+              <span>M-{{ m.numeroMesa }}</span>
+            </div>
+          </div>
+          <div class="mesa-card-details">
+            <p><strong>Ubicación:</strong> {{ m.ubicacion }}</p>
+            <p><strong>Capacidad:</strong> {{ m.capacidad }} personas</p>
+          </div>
+          <div class="mesa-card-actions" *ngIf="esAdmin()">
+            <button class="btn-action-2d btn-cancelar" (click)="eliminarMesa(m.id!)">Eliminar Mesa</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. USUARIOS (ADMIN) -->
+    <section *ngIf="seccionActiva === 'usuarios' && esAdmin()" class="section-view-2d">
+      <div class="filter-bar-2d">
+        <div>
+          <h3>Administración de Personal</h3>
+          <p class="text-muted">Cuentas con acceso al sistema</p>
+        </div>
+        <button class="btn-2d btn-2d-black" (click)="modalUsuarioAbierto = true">
+          + Nuevo Usuario
+        </button>
+      </div>
+
+      <div class="card-panel-2d">
+        <div class="table-responsive-2d">
+          <table class="tabla-2d">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Correo</th>
+                <th>Rol</th>
+                <th>Teléfono</th>
+                <th>Estado</th>
+                <th>Acción</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let u of usuarios">
+                <td>#{{ u.id }}</td>
+                <td><strong>{{ u.user }}</strong></td>
+                <td>{{ u.email }}</td>
+                <td>
+                  <span class="role-tag-2d" [ngClass]="'role-' + u.rol.toLowerCase()">
+                    {{ u.rol }}
+                  </span>
+                </td>
+                <td>{{ u.telefono || '-' }}</td>
+                <td>
+                  <span class="badge-status-2d" [class.status-disponible]="u.activo">
+                    {{ u.activo ? 'ACTIVO' : 'INACTIVO' }}
+                  </span>
+                </td>
+                <td class="action-buttons-cell">
+                  <button class="btn-action-2d btn-atender" (click)="abrirEditarUsuario(u)" title="Editar datos del usuario">
+                    ✎ Editar
+                  </button>
+                  <button class="btn-action-2d btn-cancelar" (click)="eliminarUsuario(u.id!)" title="Eliminar usuario">
+                    ✕ Eliminar
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- MODAL RESERVA -->
+  <div *ngIf="modalReservaAbierto" class="modal-backdrop-2d">
+    <div class="modal-card-2d">
+      <div class="modal-header-2d">
+        <h3>+ Nueva Reserva</h3>
+        <button class="modal-close-btn" (click)="modalReservaAbierto = false">✕</button>
+      </div>
+      <form (ngSubmit)="crearReserva()">
+        <div class="form-grid-2d">
+          <div class="form-group-2d">
+            <label>Mesa:</label>
+            <select [(ngModel)]="nuevaReserva.mesaId" name="mesaId" class="input-2d" required>
+              <option *ngFor="let m of mesas" [value]="m.id">
+                Mesa #{{ m.numeroMesa }} ({{ m.ubicacion }}) - Máx {{ m.capacidad }} pers.
+              </option>
+            </select>
+          </div>
+          <div class="form-group-2d">
+            <label>Servicio:</label>
+            <select [(ngModel)]="nuevaReserva.servicioId" name="servicioId" class="input-2d" required>
+              <option *ngFor="let s of servicios" [value]="s.id">
+                {{ s.nombre }} (S/ {{ s.precio }})
+              </option>
+            </select>
+          </div>
+          <div class="form-group-2d">
+            <label>Fecha:</label>
+            <input type="date" [(ngModel)]="nuevaReserva.fechaReserva" name="fechaReserva" class="input-2d" required />
+          </div>
+          <div class="form-group-2d">
+            <label>Hora:</label>
+            <input type="time" [(ngModel)]="nuevaReserva.horaReserva" name="horaReserva" class="input-2d" required />
+          </div>
+          <div class="form-group-2d">
+            <label>Personas:</label>
+            <input type="number" [(ngModel)]="nuevaReserva.cantidadPersonas" name="cantidadPersonas" min="1" max="20" class="input-2d" required />
+          </div>
+          <div class="form-group-2d">
+            <label>Observaciones:</label>
+            <input type="text" [(ngModel)]="nuevaReserva.observaciones" name="observaciones" placeholder="Opcional" class="input-2d" />
+          </div>
+        </div>
+        <div class="modal-footer-2d">
+          <button type="button" class="btn-2d btn-2d-white" (click)="modalReservaAbierto = false">Cancelar</button>
+          <button type="submit" class="btn-2d btn-2d-black">Confirmar Reserva</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL SERVICIO -->
+  <div *ngIf="modalServicioAbierto" class="modal-backdrop-2d">
+    <div class="modal-card-2d">
+      <div class="modal-header-2d">
+        <h3>+ Agregar Servicio a la Carta</h3>
+        <button class="modal-close-btn" (click)="modalServicioAbierto = false">✕</button>
+      </div>
+      <form (ngSubmit)="crearServicio()">
+        <div class="form-grid-2d">
+          <div class="form-group-2d full-width">
+            <label>Nombre:</label>
+            <input type="text" [(ngModel)]="nuevoServicio.nombre" name="nombre" class="input-2d" required />
+          </div>
+          <div class="form-group-2d full-width">
+            <label>Descripción:</label>
+            <input type="text" [(ngModel)]="nuevoServicio.descripcion" name="descripcion" class="input-2d" required />
+          </div>
+          <div class="form-group-2d">
+            <label>Precio (S/):</label>
+            <input type="number" step="0.50" [(ngModel)]="nuevoServicio.precio" name="precio" class="input-2d" required />
+          </div>
+          <div class="form-group-2d">
+            <label>Duración (minutos):</label>
+            <input type="number" [(ngModel)]="nuevoServicio.duracionMinutos" name="duracionMinutos" class="input-2d" required />
+          </div>
+        </div>
+        <div class="modal-footer-2d">
+          <button type="button" class="btn-2d btn-2d-white" (click)="modalServicioAbierto = false">Cancelar</button>
+          <button type="submit" class="btn-2d btn-2d-black">Guardar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL MESA -->
+  <div *ngIf="modalMesaAbierto" class="modal-backdrop-2d">
+    <div class="modal-card-2d">
+      <div class="modal-header-2d">
+        <h3>+ Registrar Mesa</h3>
+        <button class="modal-close-btn" (click)="modalMesaAbierto = false">✕</button>
+      </div>
+      <form (ngSubmit)="crearMesa()">
+        <div class="form-grid-2d">
+          <div class="form-group-2d">
+            <label>Número de Mesa:</label>
+            <input type="number" [(ngModel)]="nuevaMesa.numeroMesa" name="numeroMesa" class="input-2d" required />
+          </div>
+          <div class="form-group-2d">
+            <label>Capacidad:</label>
+            <input type="number" [(ngModel)]="nuevaMesa.capacidad" name="capacidad" min="1" class="input-2d" required />
+          </div>
+          <div class="form-group-2d full-width">
+            <label>Ubicación:</label>
+            <input type="text" [(ngModel)]="nuevaMesa.ubicacion" name="ubicacion" class="input-2d" placeholder="Ej: Terraza Frontal" required />
+          </div>
+        </div>
+        <div class="modal-footer-2d">
+          <button type="button" class="btn-2d btn-2d-white" (click)="modalMesaAbierto = false">Cancelar</button>
+          <button type="submit" class="btn-2d btn-2d-black">Guardar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL USUARIO -->
+  <div *ngIf="modalUsuarioAbierto" class="modal-backdrop-2d">
+    <div class="modal-card-2d">
+      <div class="modal-header-2d">
+        <h3>+ Nuevo Usuario</h3>
+        <button class="modal-close-btn" (click)="modalUsuarioAbierto = false">✕</button>
+      </div>
+      <form (ngSubmit)="crearUsuario()">
+        <div class="form-grid-2d">
+          <div class="form-group-2d">
+            <label>Nombre:</label>
+            <input type="text" [(ngModel)]="nuevoUsuarioAdmin.user" name="user" class="input-2d" required />
+          </div>
+          <div class="form-group-2d">
+            <label>Correo:</label>
+            <input type="email" [(ngModel)]="nuevoUsuarioAdmin.email" name="email" class="input-2d" required />
+          </div>
+          <div class="form-group-2d">
+            <label>Contraseña:</label>
+            <input type="password" [(ngModel)]="nuevoUsuarioAdmin.password" name="password" class="input-2d" required />
+          </div>
+          <div class="form-group-2d">
+            <label>Rol:</label>
+            <select [(ngModel)]="nuevoUsuarioAdmin.rol" name="rol" class="input-2d">
+              <option value="CLIENTE">CLIENTE</option>
+              <option value="EMPLEADO">EMPLEADO</option>
+              <option value="ADMIN">ADMIN</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer-2d">
+          <button type="button" class="btn-2d btn-2d-white" (click)="modalUsuarioAbierto = false">Cancelar</button>
+          <button type="submit" class="btn-2d btn-2d-black">Crear Usuario</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL EDITAR USUARIO -->
+  <div *ngIf="modalEditarUsuarioAbierto && usuarioAEditar" class="modal-backdrop-2d">
+    <div class="modal-card-2d">
+      <div class="modal-header-2d">
+        <h3>✎ Editar Usuario #{{ usuarioAEditar.id }}</h3>
+        <button class="modal-close-btn" (click)="modalEditarUsuarioAbierto = false">✕</button>
+      </div>
+      <form (ngSubmit)="guardarEdicionUsuario()">
+        <div class="form-grid-2d">
+          <div class="form-group-2d">
+            <label>Nombre y Apellidos:</label>
+            <input type="text" [(ngModel)]="usuarioAEditar.user" name="editUser" class="input-2d" required />
+          </div>
+          <div class="form-group-2d">
+            <label>Correo Electrónico:</label>
+            <input type="email" [value]="usuarioAEditar.email" class="input-2d" disabled title="El correo no se puede modificar" />
+          </div>
+          <div class="form-group-2d">
+            <label>Rol Asignado:</label>
+            <select [(ngModel)]="usuarioAEditar.rol" name="editRol" class="input-2d">
+              <option value="CLIENTE">CLIENTE</option>
+              <option value="EMPLEADO">EMPLEADO</option>
+              <option value="ADMIN">ADMIN</option>
+            </select>
+          </div>
+          <div class="form-group-2d">
+            <label>Teléfono:</label>
+            <input type="text" [(ngModel)]="usuarioAEditar.telefono" name="editTel" class="input-2d" />
+          </div>
+          <div class="form-group-2d">
+            <label>Estado de la cuenta:</label>
+            <select [(ngModel)]="usuarioAEditar.activo" name="editActivo" class="input-2d">
+              <option [ngValue]="true">ACTIVO</option>
+              <option [ngValue]="false">INACTIVO</option>
+            </select>
+          </div>
+          <div class="form-group-2d">
+            <label>Nueva Contraseña (Opcional):</label>
+            <input type="password" [(ngModel)]="usuarioAEditar.password" name="editPassword" placeholder="Dejar en blanco para no cambiar" class="input-2d" />
+          </div>
+        </div>
+        <div class="modal-footer-2d">
+          <button type="button" class="btn-2d btn-2d-white" (click)="modalEditarUsuarioAbierto = false">Cancelar</button>
+          <button type="submit" class="btn-2d btn-2d-black">Guardar Cambios</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</div>

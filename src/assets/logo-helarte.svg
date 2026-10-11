@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 560" width="100%" height="100%">
+  <!-- Fondo suave sketch -->
+  <rect width="100%" height="100%" fill="transparent"/>
+
+  <!-- Título Superior H-elarte -->
+  <text x="250" y="70" text-anchor="middle" font-family="'Georgia', 'Times New Roman', serif" font-weight="900" font-size="58" fill="#000000" letter-spacing="-1">
+    H-elarte
+  </text>
+
+  <!-- Marco Exterior 2D -->
+  <rect x="90" y="95" width="320" height="400" rx="42" ry="42" fill="#FFFFFF" stroke="#000000" stroke-width="7"/>
+
+  <!-- Pelo / Silueta Mona Lisa -->
+  <!-- Cabello lado izquierdo -->
+  <path d="M 175 220 C 150 250 145 320 160 380 C 165 400 175 420 180 435" fill="none" stroke="#000000" stroke-width="5" stroke-linecap="round"/>
+  <!-- Cabello lado derecho -->
+  <path d="M 315 210 C 350 240 355 310 340 370 C 330 405 320 425 315 440" fill="none" stroke="#000000" stroke-width="5" stroke-linecap="round"/>
+
+  <!-- Cabeza y Frente -->
+  <path d="M 195 210 C 195 160 305 160 305 210" fill="none" stroke="#000000" stroke-width="5" stroke-linecap="round"/>
+
+  <!-- Contorno de Rostro -->
+  <path d="M 195 215 C 190 260 210 300 250 305 C 290 300 310 260 305 215" fill="none" stroke="#000000" stroke-width="4.5" stroke-linecap="round"/>
+
+  <!-- Ojos y Cejas -->
+  <!-- Ceja izq y ojo -->
+  <path d="M 215 225 Q 228 221 235 225" fill="none" stroke="#000000" stroke-width="3.5" stroke-linecap="round"/>
+  <ellipse cx="225" cy="233" rx="3.5" ry="3" fill="#000000"/>
+  <!-- Ceja der y ojo -->
+  <path d="M 265 225 Q 272 221 285 225" fill="none" stroke="#000000" stroke-width="3.5" stroke-linecap="round"/>
+  <ellipse cx="275" cy="233" rx="3.5" ry="3" fill="#000000"/>
+
+  <!-- Nariz y Boca Mona Lisa (Sonrisa sutil) -->
+  <path d="M 250 236 L 246 256 Q 252 260 255 258" fill="none" stroke="#000000" stroke-width="3.5" stroke-linecap="round"/>
+  <path d="M 238 274 Q 250 282 262 274" fill="none" stroke="#000000" stroke-width="4" stroke-linecap="round"/>
+  <path d="M 245 289 Q 250 292 255 289" fill="none" stroke="#000000" stroke-width="3" stroke-linecap="round"/>
+
+  <!-- Cuello y Hombros -->
+  <path d="M 225 304 L 210 355" fill="none" stroke="#000000" stroke-width="4" stroke-linecap="round"/>
+  <path d="M 275 304 L 290 355" fill="none" stroke="#000000" stroke-width="4" stroke-linecap="round"/>
+  <path d="M 160 380 C 130 405 105 440 100 480" fill="none" stroke="#000000" stroke-width="6" stroke-linecap="round"/>
+  <path d="M 340 370 C 370 395 395 435 400 480" fill="none" stroke="#000000" stroke-width="6" stroke-linecap="round"/>
+
+  <!-- Ropaje / Manto 2D -->
+  <path d="M 200 375 Q 250 395 300 375" fill="none" stroke="#000000" stroke-width="4" stroke-linecap="round"/>
+  <path d="M 330 360 C 350 400 345 440 335 475" fill="none" stroke="#000000" stroke-width="5" stroke-linecap="round"/>
+
+  <!-- Manos sosteniendo el helado -->
+  <path d="M 180 435 C 190 410 220 420 235 445 C 245 460 235 480 215 485 C 190 485 175 460 180 435 Z" fill="#FFFFFF" stroke="#000000" stroke-width="4.5" stroke-linecap="round"/>
+  <path d="M 320 440 C 310 415 280 425 265 450 C 255 465 265 485 285 490 C 310 490 325 465 320 440 Z" fill="#FFFFFF" stroke="#000000" stroke-width="4.5" stroke-linecap="round"/>
+
+  <!-- HELADO EN CONO CON COLOR (El único toque de color, como en el logo real) -->
+  <!-- Cono barquillo -->
+  <path d="M 230 435 L 250 485 L 270 435 Z" fill="#FDEBD0" stroke="#000000" stroke-width="4.5" stroke-linejoin="round"/>
+  <line x1="237" y1="445" x2="258" y2="475" stroke="#000000" stroke-width="2.5"/>
+  <line x1="263" y1="445" x2="242" y2="475" stroke="#000000" stroke-width="2.5"/>
+
+  <!-- Bola Menta (Verde Pastel) -->
+  <circle cx="235" cy="405" r="22" fill="#A2D9CE" stroke="#000000" stroke-width="4.5"/>
+  <!-- Bola Melocotón / Vainilla (Amarillo Suave) -->
+  <circle cx="250" cy="385" r="23" fill="#F9E79F" stroke="#000000" stroke-width="4.5"/>
+  <!-- Bola Fresa (Rosa Pastel) -->
+  <circle cx="265" cy="410" r="22" fill="#F5B7B1" stroke="#000000" stroke-width="4.5"/>
+
+  <!-- Subtítulo Inferior: ice cream, crepes & waffles -->
+  <text x="250" y="528" text-anchor="middle" font-family="'Courier New', Courier, monospace" font-weight="700" font-size="20" fill="#000000" letter-spacing="1">
+    ice cream, crepes &amp; waffles
+  </text>
+</svg>
