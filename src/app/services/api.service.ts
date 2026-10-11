@@ -13,25 +13,20 @@ export class ApiService {
   public currentUser: AuthResponse | null = null;
 
   constructor(private http: HttpClient) {
-    // Restaurar sesión si existe en localStorage
-    const saved = localStorage.getItem('helarte_user');
-    const auth = localStorage.getItem('helarte_auth');
-    if (saved && auth) {
-      this.currentUser = JSON.parse(saved);
-      this.currentAuth = auth;
-    }
+    // La identidad y el rol se consultan al servidor en cada sesión restaurada.
+    const auth = sessionStorage.getItem('helarte_auth');
+    if (auth) this.currentAuth = auth;
   }
 
   setCredentials(email: string, pass: string): void {
     this.currentAuth = btoa(`${email}:${pass}`);
-    localStorage.setItem('helarte_auth', this.currentAuth);
+    sessionStorage.setItem('helarte_auth', this.currentAuth);
   }
 
   clearCredentials(): void {
     this.currentAuth = null;
     this.currentUser = null;
-    localStorage.removeItem('helarte_auth');
-    localStorage.removeItem('helarte_user');
+    sessionStorage.removeItem('helarte_auth');
   }
 
   private getHeaders(): HttpHeaders {
@@ -52,13 +47,22 @@ export class ApiService {
     });
   }
 
+  restoreSession(): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(`${this.apiUrl}/auth/login`, {}, {
+      headers: this.getHeaders()
+    });
+  }
+
+  hasSavedCredentials(): boolean {
+    return this.currentAuth !== null;
+  }
+
   registro(usuario: Usuario): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.apiUrl}/auth/registro`, usuario);
   }
 
   saveLoggedUser(user: AuthResponse): void {
     this.currentUser = user;
-    localStorage.setItem('helarte_user', JSON.stringify(user));
   }
 
   // --- 2. Servicios de Heladería ---
@@ -99,6 +103,12 @@ export class ApiService {
 
   crearMesa(mesa: Mesa): Observable<Mesa> {
     return this.http.post<Mesa>(`${this.apiUrl}/mesas`, mesa, {
+      headers: this.getHeaders()
+    });
+  }
+
+  actualizarMesa(id: number, mesa: Partial<Mesa>): Observable<Mesa> {
+    return this.http.put<Mesa>(`${this.apiUrl}/mesas/${id}`, mesa, {
       headers: this.getHeaders()
     });
   }

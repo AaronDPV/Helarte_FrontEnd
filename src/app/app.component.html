@@ -1,11 +1,38 @@
 <!-- ============================================== -->
 <!-- PANTALLA DE INICIO DE SESIÓN ELEGANTE 2D       -->
 <!-- ============================================== -->
-<div *ngIf="!api.currentUser" class="login-wrapper-2d">
+<main *ngIf="!loginVisible && (!api.currentUser || publicHomeVisible)" class="public-site">
+  <div class="announcement">PRIMER LUGAR 2D DEL PERÚ <span>·</span> ICE CREAM, CREPES & WAFFLES <span>·</span> DESDE EL 2023</div>
+  <header class="public-header"><a class="brand" href="#inicio"><img src="assets/logo-helarte.png" alt="H-elarte"></a><nav><a href="#experiencias">Conócenos</a><a href="#menu">Explora nuestro menú</a><a href="#sedes">Nuestras sedes</a></nav><button class="account-button" (click)="abrirLogin()">Mi cuenta <span>↗</span></button></header>
+  <section class="hero" id="inicio"><div class="hero-copy"><span class="eyebrow">DESDE EL 2023</span><h1>Bienvenidos<br>a H-elarte</h1><p>Un espacio temático 2D, con diseños y pinturas hechos a mano. Aquí se encuentran el arte visual y el gastronómico.</p><p class="hero-small">Helados artesanales, crepes y waffles para disfrutar en familia y con amigos.</p><div class="hero-actions"><a href="#menu" class="primary-button">Ver menú</a><button class="secondary-button" (click)="abrirReservaPublica()">Reservar una mesa</button></div></div><div class="hero-art"><img src="assets/local-2d-interior.png" alt="Ambientes dibujados a mano de H-elarte"></div></section>
+  <section class="experience" id="experiencias">
+    <div class="experience-intro">
+      <span class="eyebrow">H-ELARTE · DESDE EL 2023</span>
+      <h2>Donde el color<br>lo pones <em>tú.</em></h2>
+      <p>Diseños y pinturas hechos a mano convierten cada visita en una experiencia: un espacio dibujado en blanco y negro y postres llenos de color.</p>
+      <button class="primary-button experience-reserve" (click)="abrirReservaPublica()">Planea tu visita <span aria-hidden="true">↗</span></button>
+    </div>
+    <div class="experience-art"><img src="assets/menu-2d.png" alt="Waffles, crepes, pancakes, helados y otras opciones de H-elarte"></div>
+    <div class="experience-cards">
+      <article><span>01 · EL ESPACIO</span><h3>Un mundo dibujado a mano</h3><p>Muros, mesas y detalles crean la ilusión de entrar en una ilustración.</p></article>
+      <article><span>02 · ALGO RICO</span><h3>Helados, waffles y más</h3><p>Postres y opciones para compartir en familia o con amigos.</p></article>
+      <article><span>03 · TU MOMENTO</span><h3>Ven a disfrutarlo</h3><p>Elige la fecha y hora de tu visita y solicita una mesa.</p><button class="text-link visit-link" (click)="abrirReservaPublica()">Reservar mesa →</button></article>
+    </div>
+  </section>
+  <section class="menu-section" id="menu"><div class="menu-heading"><span class="eyebrow">ALGO PARA TODOS LOS GUSTOS</span><h2>Explora nuestro menú</h2><p>Waffles, crepes, postres y helados artesanales para disfrutar en cualquier momento.</p></div><div class="menu-grid"><article class="menu-item"><img src="assets/menu-waffles.png" alt="Waffles dulces y salados de H-elarte"><h3>Waffles</h3><small>Dulces y salados</small></article><article class="menu-item"><img src="assets/menu-crepes.png" alt="Crepes dulces y salados de H-elarte"><h3>Crepes</h3><small>Dulces y salados</small></article><article class="menu-item"><img src="assets/menu-pancakes.png" alt="Pancakes de H-elarte"><h3>Pancakes</h3><small>Recién hechos</small></article><article class="menu-item"><img src="assets/menu-helados.png" alt="Helados artesanales de H-elarte"><h3>Helados</h3><small>Artesanales</small></article></div></section>
+  <section class="visit-section" id="sedes">
+    <div class="visit-photo"><img src="assets/local-2d-interior.png" alt="Ambientes ilustrados de H-elarte"><span>UNA EXPERIENCIA<br>FUERA DE LO COMÚN</span></div>
+    <div class="visit-copy"><span class="eyebrow">TE ESPERAMOS TODOS LOS DÍAS</span><h2>Tu próxima visita empieza aquí</h2><p>Ven por algo dulce, celebra una ocasión especial o comparte un momento diferente.</p><div class="branch-hours"><article><strong>Surco</strong><span>10:30 a. m. – 10:00 p. m.</span></article><article><strong>Miraflores · San Borja</strong><span>8:00 a. m. – 10:00 p. m.</span></article></div><button class="primary-button" (click)="abrirReservaPublica()">Reservar una mesa</button></div>
+  </section>
+  <footer class="public-footer"><img src="assets/logo-helarte.png" alt="H-elarte"><span>Surco · Miraflores · San Borja · De lunes a domingo</span><button (click)="abrirLogin()">Iniciar sesión</button></footer>
+</main>
+
+<div *ngIf="!api.currentUser && loginVisible" class="login-wrapper-2d">
+  <button class="back-home" (click)="irInicioPublico()">← Volver a Helarte</button>
   <div class="login-card-2d">
     <div class="login-header-2d">
       <img src="assets/logo-helarte.png" alt="H-elarte Logo" class="login-logo-img" />
-      <div class="login-brand-tag">SISTEMA WEB 2D</div>
+      <div class="login-brand-tag">H-ELARTE · RESERVAS</div>
       <h2>{{ modoRegistro ? 'Registro de Cliente' : 'Iniciar Sesión' }}</h2>
       <p class="login-subtitle">Gestión de Reservas & Servicios de Heladería</p>
     </div>
@@ -48,22 +75,6 @@
         {{ cargandoLogin ? 'Validando credenciales...' : 'Ingresar al Panel' }}
       </button>
 
-      <!-- ACCESOS RÁPIDOS DE PRUEBA -->
-      <div class="demo-accounts-box">
-        <span class="demo-title">Cuentas de demostración (1 clic):</span>
-        <div class="demo-buttons">
-          <button type="button" class="btn-demo" (click)="seleccionarCuentaDemo('admin@helarte.com', 'admin123')">
-            Admin
-          </button>
-          <button type="button" class="btn-demo" (click)="seleccionarCuentaDemo('empleado@helarte.com', 'empleado123')">
-            Empleado
-          </button>
-          <button type="button" class="btn-demo" (click)="seleccionarCuentaDemo('cliente@helarte.com', 'cliente123')">
-            Cliente
-          </button>
-        </div>
-      </div>
-
       <div class="toggle-mode-box">
         <span>¿Deseas una cuenta nueva?</span>
         <button type="button" class="link-toggle" (click)="modoRegistro = true">Crear cuenta de cliente</button>
@@ -105,55 +116,20 @@
 <!-- ============================================== -->
 <!-- PANEL DE ADMINISTRADOR (SOLO USUARIOS CON LOGIN) -->
 <!-- ============================================== -->
-<div *ngIf="api.currentUser" class="app-layout-2d">
+<div *ngIf="api.currentUser && !publicHomeVisible" class="app-layout-2d">
 
-  <!-- SIDEBAR LATERAL -->
-  <aside class="sidebar-2d">
-    <div class="logo-box-2d">
-      <img src="assets/logo-helarte.png" alt="H-elarte Logo" class="logo-img-2d" />
-      <div class="tag-2d">DESDE EL 2023</div>
-      <p class="tagline-2d">ice cream, crepes & waffles</p>
-    </div>
-
-    <nav class="nav-menu-2d">
-      <button class="nav-item-2d" [class.activo]="seccionActiva === 'dashboard'" (click)="seccionActiva = 'dashboard'">
-        <span class="icon-2d">📊</span>
-        <span class="texto">Dashboard</span>
-      </button>
-
-      <button class="nav-item-2d" [class.activo]="seccionActiva === 'reservas'" (click)="seccionActiva = 'reservas'">
-        <span class="icon-2d">📅</span>
-        <span class="texto">Reservas</span>
-        <span class="badge-contador" *ngIf="reservasPendientes > 0">{{ reservasPendientes }}</span>
-      </button>
-
-      <button class="nav-item-2d" [class.activo]="seccionActiva === 'servicios'" (click)="seccionActiva = 'servicios'">
-        <span class="icon-2d">🍨</span>
-        <span class="texto">Servicios & Carta</span>
-      </button>
-
-      <button class="nav-item-2d" [class.activo]="seccionActiva === 'mesas'" (click)="seccionActiva = 'mesas'">
-        <span class="icon-2d">🪑</span>
-        <span class="texto">Mesas & Zonas</span>
-      </button>
-
-      <button *ngIf="esAdmin()" class="nav-item-2d" [class.activo]="seccionActiva === 'usuarios'" (click)="seccionActiva = 'usuarios'">
-        <span class="icon-2d">👥</span>
-        <span class="texto">Usuarios</span>
+  <button *ngIf="mobileMenuOpen" type="button" class="mobile-menu-backdrop" aria-label="Cerrar menú" (click)="alternarMenuMovil()"></button>
+  <aside id="mobile-sidebar" class="sidebar-2d" [class.mobile-open]="mobileMenuOpen">
+    <div class="logo-box-2d"><img src="assets/logo-helarte.png" alt="H-elarte" class="logo-img-2d"><span class="tag-2d">DESDE EL 2023</span><p class="tagline-2d">ice cream, crepes & waffles</p></div>
+    <button type="button" class="mobile-menu-close" aria-label="Cerrar menú" (click)="alternarMenuMovil()">✕</button>
+    <button type="button" class="public-link-panel" (click)="irInicioPublico()">↗ Ver página pública</button>
+    <nav class="nav-menu-2d" aria-label="Navegación del panel">
+      <button *ngFor="let pestana of pestanasNavegacion" type="button" class="nav-item-2d" [class.activo]="seccionActiva === pestana.seccion" [attr.aria-current]="seccionActiva === pestana.seccion ? 'page' : null" (click)="navegarA(pestana.seccion)">
+        <span class="icon-2d" aria-hidden="true">{{ pestana.seccion === 'dashboard' ? '▦' : pestana.seccion === 'reservas' ? '▣' : pestana.seccion === 'servicios' ? '❋' : pestana.seccion === 'mesas' ? '♧' : pestana.seccion === 'perfil' ? '☺' : pestana.seccion === 'empleados' ? '♙' : pestana.seccion === 'clientes' ? '♡' : '♙' }}</span>
+        <span class="texto">{{ pestana.etiqueta }}</span><span *ngIf="pestana.seccion === 'reservas' && reservasPendientes > 0" class="badge-contador">{{ reservasPendientes }}</span>
       </button>
     </nav>
-
-    <!-- FICHA DE SESIÓN -->
-    <div class="user-card-2d">
-      <div class="user-avatar-2d">
-        {{ api.currentUser.user.charAt(0) }}
-      </div>
-      <div class="user-info-2d">
-        <strong class="user-name">{{ api.currentUser.user }}</strong>
-        <span class="user-role-badge">{{ api.currentUser.rol }}</span>
-      </div>
-      <button class="btn-logout-2d" title="Cerrar sesión" (click)="cerrarSesion()">✕</button>
-    </div>
+    <div class="user-card-2d"><div class="user-avatar-2d">{{ api.currentUser.user.charAt(0) }}</div><div class="user-info-2d"><strong class="user-name">{{ api.currentUser.user }}</strong><span class="user-role-badge">{{ api.currentUser.rol }}</span></div><button class="btn-logout-2d" title="Cerrar sesión" (click)="cerrarSesion()">↪</button></div>
   </aside>
 
   <!-- CONTENIDO PRINCIPAL -->
@@ -162,21 +138,27 @@
     <!-- CABECERA -->
     <header class="topbar-2d">
       <div class="topbar-left">
+        <button type="button" class="mobile-menu-toggle" aria-label="Abrir navegación" aria-controls="mobile-sidebar" [attr.aria-expanded]="mobileMenuOpen" (click)="alternarMenuMovil()">☰<span>Menú</span></button>
         <h1 class="page-title-2d">
-          <span *ngIf="seccionActiva === 'dashboard'">Panel de Control</span>
+          <span *ngIf="seccionActiva === 'dashboard' && esAdmin()">Panel de Administración</span>
+          <span *ngIf="seccionActiva === 'dashboard' && esEmpleadoOAdmin() && !esAdmin()">Panel de Sala</span>
+          <span *ngIf="seccionActiva === 'dashboard' && esCliente()">Mi espacio Helarte</span>
           <span *ngIf="seccionActiva === 'reservas'">Gestión de Reservas</span>
-          <span *ngIf="seccionActiva === 'servicios'">Catálogo de Servicios</span>
+          <span *ngIf="seccionActiva === 'servicios'">Servicios de Reserva</span>
           <span *ngIf="seccionActiva === 'mesas'">Mesas del Establecimiento</span>
           <span *ngIf="seccionActiva === 'usuarios'">Administración de Usuarios</span>
+          <span *ngIf="seccionActiva === 'empleados'">Gestión de Empleados</span>
+          <span *ngIf="seccionActiva === 'clientes'">Cartera de Clientes</span>
+          <span *ngIf="seccionActiva === 'perfil'">Mi perfil</span>
         </h1>
         <div class="status-indicator-2d">
           <span class="dot-online"></span>
-          <span>API REST Conectada (localhost:8080) &bull; MySQL Activo</span>
+          <span>{{ api.currentUser.rol === 'CLIENTE' ? 'Tu espacio Helarte' : 'Gestión Helarte' }}</span>
         </div>
       </div>
 
       <div class="topbar-actions">
-        <button class="btn-2d btn-2d-black" (click)="modalReservaAbierto = true">
+      <button class="btn-2d btn-2d-black" (click)="abrirNuevaReserva()">
           + Nueva Reserva
         </button>
         <button *ngIf="esAdmin() && seccionActiva === 'servicios'" class="btn-2d btn-2d-white" (click)="modalServicioAbierto = true">
@@ -200,7 +182,7 @@
     </div>
 
     <!-- 1. DASHBOARD -->
-    <section *ngIf="seccionActiva === 'dashboard'" class="dashboard-view-2d">
+    <section *ngIf="seccionActiva === 'dashboard' && esAdmin()" class="dashboard-view-2d">
       <div class="kpi-grid-2d">
         <div class="kpi-card-2d">
           <div class="kpi-icon-wrap">📅</div>
@@ -229,7 +211,7 @@
           <div class="kpi-icon-wrap">🍨</div>
           <div class="kpi-data">
             <span class="kpi-num">{{ servicios.length }}</span>
-            <span class="kpi-label">Servicios en Menú</span>
+            <span class="kpi-label">Servicios reservables</span>
           </div>
           <div class="kpi-sub">
             <span class="kpi-chip">Waffles, Crepes, Catas</span>
@@ -252,45 +234,16 @@
         <div class="card-panel-2d">
           <div class="card-panel-header">
             <h3>Últimas Reservas</h3>
-            <button class="btn-link-2d" (click)="seccionActiva = 'reservas'">Ver todas →</button>
+            <button class="btn-link-2d" (click)="navegarA('reservas')">Ver todas →</button>
           </div>
-          <div class="table-responsive-2d">
-            <table class="tabla-2d">
-              <thead>
-                <tr>
-                  <th>Código</th>
-                  <th>Cliente</th>
-                  <th>Mesa</th>
-                  <th>Servicio</th>
-                  <th>Fecha & Hora</th>
-                  <th>Estado</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let r of reservas.slice(0, 5)">
-                  <td><span class="ticket-code-2d">{{ r.codigoReserva }}</span></td>
-                  <td><strong>{{ r.usuario.user }}</strong></td>
-                  <td>Mesa #{{ r.mesa.numeroMesa }}</td>
-                  <td>{{ r.servicio.nombre }}</td>
-                  <td>{{ r.fechaReserva }} {{ r.horaReserva }}</td>
-                  <td>
-                    <span class="badge-status-2d" [ngClass]="'status-' + r.estado.toLowerCase()">
-                      {{ r.estado }}
-                    </span>
-                  </td>
-                </tr>
-                <tr *ngIf="reservas.length === 0">
-                  <td colspan="6" class="text-center">No hay reservas registradas.</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+          <div *ngIf="reservas.length === 0" class="empty-state">No hay reservas registradas.</div>
+          <article *ngFor="let r of reservas.slice(0, 5)" class="dashboard-reservation-card"><div class="reservation-date"><strong>{{ r.horaReserva }}</strong><span>{{ r.fechaReserva }}</span></div><div class="reservation-main"><strong>{{ r.usuario.user }}</strong><span>{{ r.servicio.nombre }} · Mesa {{ r.mesa.numeroMesa }} · {{ r.cantidadPersonas }} personas</span><small>{{ r.codigoReserva }}</small></div><span class="badge-status-2d" [ngClass]="'status-' + r.estado.toLowerCase()">{{ r.estado }}</span></article>
         </div>
 
         <div class="card-panel-2d">
           <div class="card-panel-header">
             <h3>Disponibilidad de Mesas</h3>
-            <button class="btn-link-2d" (click)="seccionActiva = 'mesas'">Ver todas →</button>
+            <button class="btn-link-2d" (click)="navegarA('mesas')">Ver todas →</button>
           </div>
           <div class="grid-mesas-mini">
             <div *ngFor="let m of mesas" class="mesa-mini-card-2d" [class.mesa-ocupada]="m.estado !== 'DISPONIBLE'">
@@ -304,6 +257,27 @@
           </div>
         </div>
       </div>
+    </section>
+
+    <section *ngIf="seccionActiva === 'dashboard' && esEmpleadoOAdmin() && !esAdmin()" class="dashboard-view-2d">
+      <div class="kpi-grid-2d">
+        <article class="kpi-card-2d"><div class="kpi-icon-wrap">📅</div><div class="kpi-data"><span class="kpi-num">{{ reservasDeHoy.length }}</span><span class="kpi-label">Reservas de hoy</span></div></article>
+        <article class="kpi-card-2d"><div class="kpi-icon-wrap">⌛</div><div class="kpi-data"><span class="kpi-num">{{ reservasPendientes }}</span><span class="kpi-label">Por confirmar</span></div></article>
+        <article class="kpi-card-2d"><div class="kpi-icon-wrap">🪑</div><div class="kpi-data"><span class="kpi-num">{{ mesasDisponibles }} / {{ mesasTotales }}</span><span class="kpi-label">Mesas disponibles</span></div></article>
+      </div>
+      <div class="dashboard-dual-2d">
+        <article class="card-panel-2d"><div class="card-panel-header"><h3>Reservas de hoy</h3><button class="btn-link-2d" (click)="navegarA('reservas')">Abrir agenda →</button></div>
+          <div *ngIf="reservasDeHoy.length === 0" class="empty-state">No hay reservas para hoy.</div>
+          <div *ngFor="let r of reservasDeHoy" class="reservation-summary"><div><strong>{{ r.horaReserva }} · {{ r.usuario.user }}</strong><p>Mesa {{ r.mesa.numeroMesa }} · {{ r.cantidadPersonas }} personas · {{ r.servicio.nombre }}</p></div><span class="badge-status-2d" [ngClass]="'status-' + r.estado.toLowerCase()">{{ r.estado }}</span></div>
+        </article>
+        <article class="card-panel-2d"><div class="card-panel-header"><h3>Accesos de sala</h3></div><p>Confirma las próximas reservas y revisa la disponibilidad de mesas.</p><div class="quick-actions"><button class="btn-2d btn-2d-black" (click)="navegarA('reservas')">Gestionar reservas</button><button class="btn-2d btn-2d-white" (click)="navegarA('mesas')">Ver mesas</button></div></article>
+      </div>
+    </section>
+
+    <section *ngIf="seccionActiva === 'dashboard' && esCliente()" class="client-dashboard">
+      <div class="client-welcome"><span class="eyebrow">H-ELARTE · MI CUENTA</span><h2>Hola, {{ api.currentUser.user }}</h2><p>Consulta tus reservas o separa una mesa para tu próxima visita.</p><button class="btn-2d btn-2d-black" (click)="abrirNuevaReserva()">+ Reservar una mesa</button></div>
+      <div class="kpi-grid-2d client-kpis"><article class="kpi-card-2d"><div class="kpi-icon-wrap">📅</div><div class="kpi-data"><span class="kpi-num">{{ proximasReservas.length }}</span><span class="kpi-label">Próximas reservas</span></div></article><article class="kpi-card-2d"><div class="kpi-icon-wrap">⌛</div><div class="kpi-data"><span class="kpi-num">{{ reservasPendientes }}</span><span class="kpi-label">Pendientes</span></div></article><article class="kpi-card-2d"><div class="kpi-icon-wrap">✓</div><div class="kpi-data"><span class="kpi-num">{{ reservasConfirmadas }}</span><span class="kpi-label">Confirmadas o atendidas</span></div></article></div>
+      <article class="card-panel-2d client-reservations"><div class="card-panel-header"><h3>Mis próximas visitas</h3><button class="btn-link-2d" (click)="navegarA('reservas')">Ver todas →</button></div><div *ngIf="proximasReservas.length === 0" class="empty-state">Todavía no tienes próximas reservas. Cuando quieras, aquí puedes crear una.</div><div *ngFor="let r of proximasReservas.slice(0, 3)" class="reservation-summary"><div><strong>{{ r.fechaReserva }} · {{ r.horaReserva }}</strong><p>{{ r.servicio.nombre }} · Mesa {{ r.mesa.numeroMesa }} · {{ r.cantidadPersonas }} personas</p><small>{{ r.codigoReserva }}</small></div><span class="badge-status-2d" [ngClass]="'status-' + r.estado.toLowerCase()">{{ r.estado }}</span></div></article>
     </section>
 
     <!-- 2. RESERVAS -->
@@ -322,72 +296,50 @@
 
         <div class="filter-actions">
           <button class="btn-2d btn-2d-white" (click)="cargarReservas()">🔄 Actualizar</button>
-          <button class="btn-2d btn-2d-black" (click)="modalReservaAbierto = true">+ Crear Reserva</button>
+          <button class="btn-2d btn-2d-black" (click)="abrirNuevaReserva()">+ Crear Reserva</button>
         </div>
       </div>
 
       <div class="card-panel-2d">
         <div class="table-responsive-2d">
-          <table class="tabla-2d">
-            <thead>
-              <tr>
-                <th>Ticket</th>
-                <th>Cliente</th>
-                <th>Mesa & Zona</th>
-                <th>Servicio</th>
-                <th>Fecha & Hora</th>
-                <th>Comensales</th>
-                <th>Estado</th>
-                <th>Observaciones</th>
-                <th>Acciones</th>
-              </tr>
-            </thead>
+          <table class="tabla-2d reservation-table">
+            <colgroup><col class="col-ticket"><col class="col-client"><col class="col-table"><col class="col-service"><col class="col-date"><col class="col-guests"><col class="col-state"><col class="col-actions"></colgroup>
+            <thead><tr><th>Ticket</th><th>Cliente</th><th>Mesa y zona</th><th class="hide-tablet">Servicio</th><th>Fecha y hora</th><th class="hide-phone">Comensales</th><th>Estado</th><th>Acciones</th></tr></thead>
             <tbody>
               <tr *ngFor="let r of reservasFiltradas">
-                <td><strong class="ticket-code-2d">{{ r.codigoReserva }}</strong></td>
-                <td>
-                  <div>{{ r.usuario.user }}</div>
-                  <small class="text-muted">{{ r.usuario.email }}</small>
-                </td>
-                <td>Mesa #{{ r.mesa.numeroMesa }} - {{ r.mesa.ubicacion }}</td>
-                <td>{{ r.servicio.nombre }}</td>
-                <td>{{ r.fechaReserva }} {{ r.horaReserva }}</td>
-                <td>👤 {{ r.cantidadPersonas }}</td>
-                <td>
-                  <span class="badge-status-2d" [ngClass]="'status-' + r.estado.toLowerCase()">
-                    {{ r.estado }}
-                  </span>
-                </td>
-                <td>{{ r.observaciones || '-' }}</td>
-                <td class="action-buttons-cell">
-                  <button *ngIf="esEmpleadoOAdmin() && r.estado === 'PENDIENTE'" class="btn-action-2d btn-confirmar" (click)="cambiarEstado(r.id, 'CONFIRMADA')">
-                    ✓ Confirmar
-                  </button>
-                  <button *ngIf="esEmpleadoOAdmin() && r.estado === 'CONFIRMADA'" class="btn-action-2d btn-atender" (click)="cambiarEstado(r.id, 'ATENDIDA')">
-                    ★ Atendida
-                  </button>
-                  <button *ngIf="r.estado !== 'CANCELADA' && r.estado !== 'ATENDIDA'" class="btn-action-2d btn-cancelar" (click)="cancelarReserva(r.id)">
-                    ✕ Cancelar
-                  </button>
+                <td data-label="Ticket"><strong class="ticket-code-2d">{{ r.codigoReserva }}</strong></td>
+                <td data-label="Cliente"><strong>{{ r.usuario.user }}</strong><small class="text-muted client-email">{{ r.usuario.email }}</small></td>
+                <td data-label="Mesa y zona">Mesa #{{ r.mesa.numeroMesa }}<small>{{ r.mesa.ubicacion }}</small></td>
+                <td data-label="Servicio" class="hide-tablet"><strong>{{ r.servicio.nombre }}</strong><small *ngIf="r.observaciones">Nota: {{ r.observaciones }}</small></td>
+                <td data-label="Fecha y hora"><span class="reservation-date-text">{{ r.fechaReserva }}</span><strong class="reservation-time-text">{{ r.horaReserva }}</strong></td>
+                <td data-label="Comensales" class="hide-phone">{{ r.cantidadPersonas }} personas</td>
+                <td data-label="Estado"><span class="badge-status-2d" [ngClass]="'status-' + r.estado.toLowerCase()">{{ r.estado }}</span></td>
+                <td data-label="Acciones" class="action-buttons-cell">
+                  <button *ngIf="esEmpleadoOAdmin() && r.estado === 'PENDIENTE'" class="btn-action-2d btn-confirmar" (click)="cambiarEstado(r.id, 'CONFIRMADA')">✓ Confirmar</button>
+                  <button *ngIf="esEmpleadoOAdmin() && r.estado === 'CONFIRMADA'" class="btn-action-2d btn-atender" (click)="cambiarEstado(r.id, 'ATENDIDA')">★ Atendida</button>
+                  <button *ngIf="r.estado !== 'CANCELADA' && r.estado !== 'ATENDIDA'" class="btn-action-2d btn-cancelar" (click)="cancelarReserva(r.id)">✕ Cancelar</button>
                 </td>
               </tr>
-              <tr *ngIf="reservasFiltradas.length === 0">
-                <td colspan="9" class="text-center py-4">No hay reservas con el filtro seleccionado.</td>
-              </tr>
+              <tr *ngIf="reservasFiltradas.length === 0"><td colspan="8" class="text-center">No hay reservas con el filtro seleccionado.</td></tr>
             </tbody>
           </table>
         </div>
       </div>
     </section>
 
+    <section *ngIf="seccionActiva === 'perfil' && esCliente()" class="section-view-2d profile-view">
+      <div class="filter-bar-2d"><div><h3>Mi cuenta</h3><p class="text-muted">Tus datos y tus reservas.</p></div><button class="btn-2d btn-2d-black" (click)="navegarA('reservas')">Ver mis reservas</button></div>
+      <div class="profile-card"><div class="profile-avatar">{{ api.currentUser.user.charAt(0) }}</div><div><span class="eyebrow">CLIENTE HELARTE</span><h2>{{ api.currentUser.user }}</h2><p>{{ api.currentUser.email }}</p><p>Tu cuenta y tus reservas, en un mismo lugar.</p></div><button class="primary-button" (click)="abrirReservaPublica()">Crear una reserva →</button></div>
+    </section>
+
     <!-- 3. SERVICIOS -->
-    <section *ngIf="seccionActiva === 'servicios'" class="section-view-2d">
+    <section *ngIf="seccionActiva === 'servicios' && esAdmin()" class="section-view-2d">
       <div class="filter-bar-2d">
         <div class="search-box-2d">
           <input type="text" [(ngModel)]="busquedaServicio" placeholder="Buscar por nombre o descripción..." class="input-2d" />
         </div>
         <button *ngIf="esAdmin()" class="btn-2d btn-2d-black" (click)="modalServicioAbierto = true">
-          + Agregar a la Carta
+          + Agregar Servicio
         </button>
       </div>
 
@@ -417,7 +369,7 @@
     </section>
 
     <!-- 4. MESAS -->
-    <section *ngIf="seccionActiva === 'mesas'" class="section-view-2d">
+    <section *ngIf="seccionActiva === 'mesas' && esEmpleadoOAdmin()" class="section-view-2d">
       <div class="filter-bar-2d">
         <div>
           <h3>Mesas del Establecimiento</h3>
@@ -433,7 +385,7 @@
           <div class="mesa-card-header">
             <span class="mesa-title">MESA {{ m.numeroMesa }}</span>
             <span class="badge-status-2d" [class.status-disponible]="m.estado === 'DISPONIBLE'" [class.status-ocupada]="m.estado !== 'DISPONIBLE'">
-              {{ m.estado }}
+              {{ m.estado === 'DISPONIBLE' ? 'ACTIVA' : 'INACTIVA' }}
             </span>
           </div>
           <div class="mesa-sketch-visual">
@@ -446,6 +398,7 @@
             <p><strong>Capacidad:</strong> {{ m.capacidad }} personas</p>
           </div>
           <div class="mesa-card-actions" *ngIf="esAdmin()">
+            <button class="btn-action-2d btn-atender" (click)="cambiarEstadoMesa(m, m.estado === 'DISPONIBLE' ? 'MANTENIMIENTO' : 'DISPONIBLE')">{{ m.estado === 'DISPONIBLE' ? 'Desactivar mesa' : 'Activar mesa' }}</button>
             <button class="btn-action-2d btn-cancelar" (click)="eliminarMesa(m.id!)">Eliminar Mesa</button>
           </div>
         </div>
@@ -453,11 +406,11 @@
     </section>
 
     <!-- 5. USUARIOS (ADMIN) -->
-    <section *ngIf="seccionActiva === 'usuarios' && esAdmin()" class="section-view-2d">
+    <section *ngIf="(seccionActiva === 'usuarios' || seccionActiva === 'empleados' || seccionActiva === 'clientes') && esAdmin()" class="section-view-2d">
       <div class="filter-bar-2d">
         <div>
-          <h3>Administración de Personal</h3>
-          <p class="text-muted">Cuentas con acceso al sistema</p>
+          <h3>{{ seccionActiva === 'empleados' ? 'Equipo Helarte' : seccionActiva === 'clientes' ? 'Clientes registrados' : 'Todas las cuentas' }}</h3>
+          <p class="text-muted">{{ seccionActiva === 'clientes' ? 'Consulta los perfiles y datos de tus clientes.' : 'Administra los accesos y roles del sistema.' }}</p>
         </div>
         <button class="btn-2d btn-2d-black" (click)="modalUsuarioAbierto = true">
           + Nuevo Usuario
@@ -466,43 +419,16 @@
 
       <div class="card-panel-2d">
         <div class="table-responsive-2d">
-          <table class="tabla-2d">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Nombre</th>
-                <th>Correo</th>
-                <th>Rol</th>
-                <th>Teléfono</th>
-                <th>Estado</th>
-                <th>Acción</th>
-              </tr>
-            </thead>
+          <table class="tabla-2d accounts-table">
+            <thead><tr><th>ID</th><th>Nombre</th><th>Correo</th><th>Rol</th><th class="hide-phone">Teléfono</th><th>Estado</th><th>Acción</th></tr></thead>
             <tbody>
-              <tr *ngFor="let u of usuarios">
-                <td>#{{ u.id }}</td>
-                <td><strong>{{ u.user }}</strong></td>
-                <td>{{ u.email }}</td>
-                <td>
-                  <span class="role-tag-2d" [ngClass]="'role-' + u.rol.toLowerCase()">
-                    {{ u.rol }}
-                  </span>
-                </td>
-                <td>{{ u.telefono || '-' }}</td>
-                <td>
-                  <span class="badge-status-2d" [class.status-disponible]="u.activo">
-                    {{ u.activo ? 'ACTIVO' : 'INACTIVO' }}
-                  </span>
-                </td>
-                <td class="action-buttons-cell">
-                  <button class="btn-action-2d btn-atender" (click)="abrirEditarUsuario(u)" title="Editar datos del usuario">
-                    ✎ Editar
-                  </button>
-                  <button class="btn-action-2d btn-cancelar" (click)="eliminarUsuario(u.id!)" title="Eliminar usuario">
-                    ✕ Eliminar
-                  </button>
-                </td>
+              <tr *ngFor="let u of usuariosFiltrados">
+                <td data-label="ID">#{{ u.id }}</td><td data-label="Nombre"><strong>{{ u.user }}</strong></td><td data-label="Correo">{{ u.email }}</td>
+                <td data-label="Rol"><span class="role-tag-2d" [ngClass]="'role-' + u.rol.toLowerCase()">{{ u.rol }}</span></td><td data-label="Teléfono" class="hide-phone">{{ u.telefono || '—' }}</td>
+                <td data-label="Estado"><span class="badge-status-2d" [class.status-disponible]="u.activo">{{ u.activo ? 'ACTIVO' : 'INACTIVO' }}</span></td>
+                <td data-label="Acción" class="action-buttons-cell"><button class="btn-action-2d btn-atender" (click)="abrirEditarUsuario(u)" title="Editar datos del usuario">✎ Editar</button><button class="btn-action-2d btn-cancelar" (click)="eliminarUsuario(u.id!)" title="Eliminar usuario">✕ Eliminar</button></td>
               </tr>
+              <tr *ngIf="usuariosFiltrados.length === 0"><td colspan="7" class="text-center">No hay cuentas en esta sección todavía.</td></tr>
             </tbody>
           </table>
         </div>
@@ -512,25 +438,27 @@
   </div>
 
   <!-- MODAL RESERVA -->
-  <div *ngIf="modalReservaAbierto" class="modal-backdrop-2d">
+  <div *ngIf="modalReservaAbierto && api.currentUser" class="modal-backdrop-2d">
     <div class="modal-card-2d">
       <div class="modal-header-2d">
         <h3>+ Nueva Reserva</h3>
         <button class="modal-close-btn" (click)="modalReservaAbierto = false">✕</button>
       </div>
       <form (ngSubmit)="crearReserva()">
+        <div *ngIf="mensajeErrorReserva" class="reservation-error" role="alert" aria-live="assertive">⚠ {{ mensajeErrorReserva }}</div>
         <div class="form-grid-2d">
           <div class="form-group-2d">
             <label>Mesa:</label>
-            <select [(ngModel)]="nuevaReserva.mesaId" name="mesaId" class="input-2d" required>
-              <option *ngFor="let m of mesas" [value]="m.id">
+            <select [(ngModel)]="nuevaReserva.mesaId" (ngModelChange)="actualizarHorarioSeleccionado()" name="mesaId" class="input-2d" required>
+              <option *ngFor="let m of mesasParaReserva" [value]="m.id">
                 Mesa #{{ m.numeroMesa }} ({{ m.ubicacion }}) - Máx {{ m.capacidad }} pers.
               </option>
             </select>
+            <small *ngIf="mesasParaReserva.length === 0" class="field-note-error">No hay mesas con horarios disponibles para esta fecha.</small>
           </div>
           <div class="form-group-2d">
             <label>Servicio:</label>
-            <select [(ngModel)]="nuevaReserva.servicioId" name="servicioId" class="input-2d" required>
+            <select [(ngModel)]="nuevaReserva.servicioId" (ngModelChange)="actualizarHorarioSeleccionado()" name="servicioId" class="input-2d" required>
               <option *ngFor="let s of servicios" [value]="s.id">
                 {{ s.nombre }} (S/ {{ s.precio }})
               </option>
@@ -538,34 +466,40 @@
           </div>
           <div class="form-group-2d">
             <label>Fecha:</label>
-            <input type="date" [(ngModel)]="nuevaReserva.fechaReserva" name="fechaReserva" class="input-2d" required />
+            <input type="date" [(ngModel)]="nuevaReserva.fechaReserva" [min]="fechaMinimaReserva" (ngModelChange)="actualizarHorarioSeleccionado()" name="fechaReserva" class="input-2d" required />
           </div>
           <div class="form-group-2d">
             <label>Hora:</label>
-            <input type="time" [(ngModel)]="nuevaReserva.horaReserva" name="horaReserva" class="input-2d" required />
+            <select [(ngModel)]="nuevaReserva.horaReserva" (ngModelChange)="mensajeErrorReserva = ''" name="horaReserva" class="input-2d" required [disabled]="horariosDisponibles.length === 0">
+              <option value="" disabled>Selecciona un horario</option>
+              <option *ngFor="let hora of horariosDisponibles" [value]="hora">{{ hora }}</option>
+            </select>
+            <small>Atención estimada: {{ duracionSeleccionada }} min · hasta {{ horaFinSeleccionada }}</small>
           </div>
           <div class="form-group-2d">
             <label>Personas:</label>
-            <input type="number" [(ngModel)]="nuevaReserva.cantidadPersonas" name="cantidadPersonas" min="1" max="20" class="input-2d" required />
+            <input type="number" [(ngModel)]="nuevaReserva.cantidadPersonas" (ngModelChange)="actualizarHorarioSeleccionado()" name="cantidadPersonas" min="1" max="20" class="input-2d" required />
           </div>
           <div class="form-group-2d">
             <label>Observaciones:</label>
             <input type="text" [(ngModel)]="nuevaReserva.observaciones" name="observaciones" placeholder="Opcional" class="input-2d" />
           </div>
         </div>
+        <div *ngIf="horariosDisponibles.length === 0" class="reservation-error" role="status">No hay horarios disponibles para esta mesa en la fecha seleccionada.</div>
+        <p *ngIf="esCliente()" class="availability-note">Tu solicitud quedará pendiente hasta que el equipo de Helarte la confirme. Los horarios mostrados no reemplazan esa confirmación.</p>
         <div class="modal-footer-2d">
           <button type="button" class="btn-2d btn-2d-white" (click)="modalReservaAbierto = false">Cancelar</button>
-          <button type="submit" class="btn-2d btn-2d-black">Confirmar Reserva</button>
+          <button type="submit" class="btn-2d btn-2d-black" [disabled]="mesasParaReserva.length === 0 || !nuevaReserva.mesaId || !nuevaReserva.horaReserva">Confirmar Reserva</button>
         </div>
       </form>
     </div>
   </div>
 
   <!-- MODAL SERVICIO -->
-  <div *ngIf="modalServicioAbierto" class="modal-backdrop-2d">
+  <div *ngIf="modalServicioAbierto && esAdmin()" class="modal-backdrop-2d">
     <div class="modal-card-2d">
       <div class="modal-header-2d">
-        <h3>+ Agregar Servicio a la Carta</h3>
+        <h3>+ Agregar Servicio de Reserva</h3>
         <button class="modal-close-btn" (click)="modalServicioAbierto = false">✕</button>
       </div>
       <form (ngSubmit)="crearServicio()">
@@ -596,7 +530,7 @@
   </div>
 
   <!-- MODAL MESA -->
-  <div *ngIf="modalMesaAbierto" class="modal-backdrop-2d">
+  <div *ngIf="modalMesaAbierto && esEmpleadoOAdmin()" class="modal-backdrop-2d">
     <div class="modal-card-2d">
       <div class="modal-header-2d">
         <h3>+ Registrar Mesa</h3>
@@ -616,6 +550,10 @@
             <label>Ubicación:</label>
             <input type="text" [(ngModel)]="nuevaMesa.ubicacion" name="ubicacion" class="input-2d" placeholder="Ej: Terraza Frontal" required />
           </div>
+          <div class="form-group-2d">
+            <label>Estado:</label>
+            <select [(ngModel)]="nuevaMesa.estado" name="estadoMesa" class="input-2d"><option value="DISPONIBLE">ACTIVA</option><option value="MANTENIMIENTO">INACTIVA</option></select>
+          </div>
         </div>
         <div class="modal-footer-2d">
           <button type="button" class="btn-2d btn-2d-white" (click)="modalMesaAbierto = false">Cancelar</button>
@@ -626,7 +564,7 @@
   </div>
 
   <!-- MODAL USUARIO -->
-  <div *ngIf="modalUsuarioAbierto" class="modal-backdrop-2d">
+  <div *ngIf="modalUsuarioAbierto && esAdmin()" class="modal-backdrop-2d">
     <div class="modal-card-2d">
       <div class="modal-header-2d">
         <h3>+ Nuevo Usuario</h3>
@@ -664,7 +602,7 @@
   </div>
 
   <!-- MODAL EDITAR USUARIO -->
-  <div *ngIf="modalEditarUsuarioAbierto && usuarioAEditar" class="modal-backdrop-2d">
+  <div *ngIf="modalEditarUsuarioAbierto && usuarioAEditar && esAdmin()" class="modal-backdrop-2d">
     <div class="modal-card-2d">
       <div class="modal-header-2d">
         <h3>✎ Editar Usuario #{{ usuarioAEditar.id }}</h3>
