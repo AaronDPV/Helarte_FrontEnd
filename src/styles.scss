@@ -202,3 +202,62 @@ body { background:#fff; color:#171717; }
 .status-indicator-2d { color:#555; }
 @media(max-width:900px) { .hero { gap:25px; } .menu-item img { aspect-ratio:1.2; } }
 @media(max-width:650px) { .announcement { font-size:.55rem; letter-spacing:.07em; } .announcement span { margin:0 5px; } .hero { grid-template-columns:1fr; gap:24px; } .hero h1 { font-size:2.8rem; } .hero-art { max-width:500px; justify-self:center; } .experience { grid-template-columns:1fr; gap:24px; } .experience-cards { grid-template-columns:1fr; gap:0; margin-top:0; } .experience-cards article { padding:18px 0; } .experience-cards article+article { padding-left:0; border-left:0; } .experience-cards p { min-height:0; } .visit-section { grid-template-columns:1fr; padding:48px 24px; gap:34px; } .visit-photo img { height:260px; } .branch-hours article { align-items:flex-start; flex-direction:column; gap:5px; } .branch-hours span { text-align:left; } .menu-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; } .menu-item { padding-bottom:12px; } .menu-item h3 { font-size:1.05rem; margin:10px 10px 2px; } .menu-item small { margin:0 10px; font-size:.7rem; } }
+
+
+/* ===== Landing ampliada: info, favoritos, promos, sedes, pasos y footer ===== */
+.info-strip { display:grid; grid-template-columns:repeat(4,1fr); border-top:2px solid #171717; border-bottom:2px solid #171717; background:#fff; }
+.info-strip article { padding:22px clamp(14px,2.5vw,30px); display:flex; flex-direction:column; gap:3px; }
+.info-strip article+article { border-left:1px solid #cfcfcf; }
+.info-strip strong { font:700 1.35rem 'Playfair Display',Georgia,serif; color:#171717; }
+.info-strip span { color:#555; font-size:.8rem; }
+.section-heading { text-align:center; margin-bottom:32px; }
+.section-heading h2 { margin:8px 0; font:700 2.2rem 'Playfair Display',Georgia,serif; color:#171717; }
+.section-heading p { max-width:520px; margin:0 auto; color:#666; font-size:.9rem; line-height:1.6; }
+.menu-cta { margin-top:26px; text-align:center; color:#555; font-size:.88rem; }
+.menu-cta a { color:#171717; font-weight:700; text-underline-offset:4px; }
+.favorites-section { padding:68px clamp(22px,8vw,120px); background:#fafafa; }
+.favorites-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:24px; }
+.favorite-card { position:relative; display:flex; flex-direction:column; gap:9px; padding:22px 22px 20px; background:#fff; border:2px solid #171717; box-shadow:6px 6px 0 #171717; transition:transform .15s, box-shadow .15s; }
+.favorite-card:hover { transform:translate(-2px,-2px); box-shadow:8px 8px 0 #171717; }
+.favorite-tag { align-self:flex-start; padding:3px 9px; background:#171717; color:#fff; font-size:.62rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase; }
+.favorite-card h3 { font-size:1.3rem; color:#171717; }
+.favorite-card p { flex:1; color:#555; font-size:.86rem; line-height:1.6; }
+.favorite-price { font:700 1.2rem 'Playfair Display',Georgia,serif; color:#171717; border-top:1px dashed #999; padding-top:10px; }
+.promos-section { padding:68px clamp(22px,8vw,120px); background:#171717; }
+.promos-section .section-heading h2, .promos-section .eyebrow { color:#fff; }
+.promos-section .section-heading p { color:#bbb; }
+.promos-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:20px; }
+.promo-card { position:relative; display:flex; flex-direction:column; gap:8px; padding:26px 20px 20px; background:#fff; border:2px solid #fff; box-shadow:5px 5px 0 #6b6b6b; }
+.promo-badge { position:absolute; top:-12px; right:14px; padding:4px 10px; background:#f9e79f; border:2px solid #171717; font-weight:800; font-size:.78rem; color:#171717; transform:rotate(3deg); }
+.promo-card h3 { font-size:1.15rem; color:#171717; }
+.promo-card p { flex:1; color:#555; font-size:.82rem; line-height:1.55; }
+.promo-prices { display:flex; align-items:baseline; gap:10px; }
+.promo-prices strong { font:700 1.35rem 'Playfair Display',Georgia,serif; color:#171717; }
+.promo-prices s { color:#888; font-size:.85rem; }
+.sedes-section { padding:68px clamp(22px,8vw,120px); background:#fff; }
+.sedes-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:24px; }
+.sede-card { padding:24px 22px; border:2px solid #171717; background:#fff; box-shadow:6px 6px 0 #171717; }
+.sede-card h3 { margin-bottom:12px; font-size:1.5rem; color:#171717; }
+.sede-card ul { list-style:none; margin-bottom:16px; }
+.sede-card li { display:flex; flex-direction:column; gap:1px; padding:9px 0; border-bottom:1px solid #e1e1e1; color:#333; font-size:.9rem; }
+.sede-card li span { color:#777; font-size:.66rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase; }
+.sede-card li a { color:#171717; text-decoration:none; }
+.sede-card .text-link { font-weight:700; color:#171717; }
+.reserva-pasos { list-style:none; counter-reset:paso; margin:24px 0; border-top:1px solid #aaa; }
+.reserva-pasos li { counter-increment:paso; display:grid; grid-template-columns:34px 1fr; column-gap:12px; padding:13px 0; border-bottom:1px solid #aaa; }
+.reserva-pasos li::before { content:counter(paso); grid-row:span 2; display:grid; place-items:center; width:30px; height:30px; border:2px solid #171717; border-radius:50%; font-weight:800; font-size:.82rem; color:#171717; }
+.reserva-pasos strong { font-size:.92rem; color:#171717; }
+.reserva-pasos span { color:#555; font-size:.82rem; }
+.site-footer { padding:52px clamp(22px,8vw,120px) 22px; background:#171717; color:#ddd; }
+.site-footer-grid { display:grid; grid-template-columns:1.4fr 1fr 1fr 1fr; gap:34px; padding-bottom:34px; border-bottom:1px solid #444; }
+.site-footer img { width:84px; padding:6px; background:#fff; border:2px solid #fff; display:block; }
+.footer-brand p { max-width:260px; margin-top:14px; color:#aaa; font-size:.84rem; line-height:1.6; }
+.site-footer h4 { margin-bottom:12px; color:#fff; font:700 .72rem 'DM Sans',sans-serif; letter-spacing:.14em; text-transform:uppercase; }
+.site-footer-grid>div:not(.footer-brand) { display:flex; flex-direction:column; gap:8px; font-size:.84rem; }
+.site-footer a { color:#ddd; text-decoration:none; }
+.site-footer a:hover { color:#fff; text-decoration:underline; }
+.site-footer-bottom { display:flex; align-items:center; justify-content:space-between; gap:16px; padding-top:20px; font-size:.78rem; color:#999; }
+.site-footer-bottom button { border:0; background:none; color:#fff; text-decoration:underline; }
+html { scroll-behavior:smooth; }
+@media(max-width:900px) { .favorites-grid, .sedes-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } .site-footer-grid { grid-template-columns:1fr 1fr; } .info-strip { grid-template-columns:repeat(2,1fr); } .info-strip article:nth-child(3) { border-left:0; } .info-strip article:nth-child(n+3) { border-top:1px solid #cfcfcf; } }
+@media(max-width:650px) { .favorites-grid, .sedes-grid { grid-template-columns:1fr; } .favorites-section, .promos-section, .sedes-section { padding:48px 22px; } .section-heading h2 { font-size:1.9rem; } .site-footer-grid { grid-template-columns:1fr; gap:26px; } .site-footer-bottom { flex-direction:column; align-items:flex-start; } .info-strip strong { font-size:1.1rem; } }

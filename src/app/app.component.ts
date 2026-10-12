@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -14,7 +14,10 @@ type AppSection = 'dashboard' | 'reservas' | 'servicios' | 'mesas' | 'usuarios' 
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
+  private readonly MINUTOS_PARA_ALISTAR = 15;
+  private refrescoHorario?: ReturnType<typeof setInterval>;
+
   seccionActiva: AppSection = 'dashboard';
   loginVisible = false;
   publicHomeVisible = false;
@@ -73,7 +76,7 @@ export class AppComponent implements OnInit {
   nuevaReserva: ReservaRequest = {
     mesaId: 1,
     servicioId: 1,
-    fechaReserva: '2026-11-20',
+    fechaReserva: this.fechaLocalActual(),
     horaReserva: '18:00',
     cantidadPersonas: 2,
     observaciones: ''
@@ -88,9 +91,37 @@ export class AppComponent implements OnInit {
     activo: true
   };
 
+  // --- Contenido de la página pública (datos tomados de helarte.com.pe; actualizar si cambian) ---
+  readonly telefonoLocal = '+51 908 900 896';
+
+  readonly platosDestacados = [
+    { categoria: 'Waffles', nombre: 'Double waffle Nocciolatta', precio: 38, descripcion: 'Doble waffle de la casa con nocciolata italiana, chantilly, chocolate rayado, maní, plátano, fresas y helado de Nutella.' },
+    { categoria: 'Crepes', nombre: 'Rainbow crepe', precio: 26, descripcion: 'Crepe multicolor con nocciolata italiana, mini marshmallows, fresas, rainbow caramel, algodón de azúcar y helado a elección.' },
+    { categoria: 'Pancakes', nombre: 'Pancake Helarte', precio: 26, descripcion: 'Seis pancakes de la casa con mix de frutas de estación, miel de maple y azúcar glass.' },
+    { categoria: 'Postres', nombre: 'Volcán de chocolate', precio: 26, descripcion: 'Volcán de chocolate al 70% de cacao con helado de vainilla, frutos del bosque, praliné de pecanas y coulis de frutos rojos.' },
+    { categoria: 'Helados', nombre: 'Banana split', precio: 32, descripcion: 'Plátano con fruta de estación y tres bolas de helado a elección, salsa de chocolate, chantilly y cerezas.' },
+    { categoria: 'Burgers', nombre: 'Helarte burger', precio: 45, descripcion: '200 g de carne Angus en pan de papa amarilla, champiñones, queso cheddar, cebolla caramelizada y tocino, con papas fritas.' }
+  ];
+
+  readonly promociones = [
+    { nombre: 'Promo 2 postres', detalle: 'Elige 2 postres: red velvet, rainbow cake, carrot cake, pie de limón, tarta de chococuyá, flan de dulce de leche o crumble de manzana.', precio: 30.60, antes: 36, descuento: 15 },
+    { nombre: 'Promo crepes x2', detalle: 'Elige 2 crepes dulces del mismo sabor.', precio: 25.50, antes: 34, descuento: 25 },
+    { nombre: 'Promo sandwich', detalle: 'Un sandwich (croissant de pollo, de huevo o mixto) más un café o iced coffee.', precio: 23.20, antes: 29, descuento: 20 },
+    { nombre: 'Waffle para compartir', detalle: 'Un double waffle a elección (Oreo, Nocciolatta o Tropical) más 2 bebidas.', precio: 54.40, antes: 64, descuento: 15 },
+    { nombre: 'Promo dulce', detalle: 'Un crepe o waffle dulce a elección más un café o iced coffee.', precio: 22.50, antes: 30, descuento: 25 }
+  ];
+
+  readonly sedes = [
+    { nombre: 'Surco', direccion: 'Jirón Augusto Wiese 778', horario: '10:30 a. m. – 10:00 p. m.', mapa: 'https://www.google.com/maps/search/?api=1&query=-12.1335383,-76.9923566' },
+    { nombre: 'Miraflores', direccion: 'Calle Bolívar 205', horario: '8:00 a. m. – 10:00 p. m.', mapa: 'https://www.google.com/maps/search/?api=1&query=-12.125672340393066,-77.02787017822266' },
+    { nombre: 'San Borja', direccion: 'Avenida de las Artes Norte 360', horario: '8:00 a. m. – 10:00 p. m.', mapa: 'https://www.google.com/maps/search/?api=1&query=-12.091471672058105,-77.00494384765625' }
+  ];
+
   constructor(public api: ApiService, private router: Router, private route: ActivatedRoute) {}
 
   ngOnInit(): void {
+    // Refresca la vista cada 30 s para que el aviso de "alistar" aparezca solo, sin tocar nada
+    this.refrescoHorario = setInterval(() => {}, 30000);
     this.route.data.subscribe(data => {
       this.mobileMenuOpen = false;
       this.seccionActiva = (data['section'] || 'dashboard') as AppSection;
@@ -120,6 +151,10 @@ export class AppComponent implements OnInit {
         }
       });
     }
+  }
+
+  ngOnDestroy(): void {
+    if (this.refrescoHorario) clearInterval(this.refrescoHorario);
   }
 
   private irAlInicioPorRol(seccion: AppSection = 'dashboard'): void {
@@ -222,21 +257,42 @@ export class AppComponent implements OnInit {
     return this.horaDesdeMinutos(this.minutosDeHora(this.nuevaReserva.horaReserva) + this.duracionSeleccionada);
   }
 
-  get horariosDisponibles(): string[] {
+  // Horarios que el servidor rechazó por ocupados (un cliente solo ve sus propias reservas)
+  private ocupadasConocidas = new Set<string>();
+
+  private claveHorario(mesaId: number, fecha: string, hora: string): string {
+    return `${Number(mesaId)}|${fecha}|${hora}`;
+  }
+
+  estadoHorario(hora: string): 'libre' | 'ocupada' | 'pasada' {
+    const ahora = new Date();
+    const minutoActual = ahora.getHours() * 60 + ahora.getMinutes();
+    const esHoy = this.nuevaReserva.fechaReserva === this.fechaMinimaReserva;
+    if (esHoy && this.minutosDeHora(hora) <= minutoActual) return 'pasada';
+    const aprendida = this.ocupadasConocidas.has(this.claveHorario(this.nuevaReserva.mesaId, this.nuevaReserva.fechaReserva, hora));
+    return this.hayCruceEn(hora) || aprendida ? 'ocupada' : 'libre';
+  }
+
+  get horariosDelDia(): { hora: string; estado: 'libre' | 'ocupada' | 'pasada' }[] {
     const mesa = this.mesas.find(m => Number(m.id) === Number(this.nuevaReserva.mesaId));
     if (!mesa || mesa.estado !== 'DISPONIBLE') return [];
     const apertura = 10 * 60 + 30;
     const cierre = 22 * 60;
-    const ahora = new Date();
-    const minutoActual = ahora.getHours() * 60 + ahora.getMinutes();
-    const esHoy = this.nuevaReserva.fechaReserva === this.fechaMinimaReserva;
-    const opciones: string[] = [];
+    const horarios: { hora: string; estado: 'libre' | 'ocupada' | 'pasada' }[] = [];
     for (let inicio = apertura; inicio + this.duracionSeleccionada <= cierre; inicio += 30) {
-      if (esHoy && inicio <= minutoActual) continue;
       const hora = this.horaDesdeMinutos(inicio);
-      if (!this.hayCruceEn(hora)) opciones.push(hora);
+      horarios.push({ hora, estado: this.estadoHorario(hora) });
     }
-    return opciones;
+    return horarios;
+  }
+
+  get horariosDisponibles(): string[] {
+    return this.horariosDelDia.filter(h => h.estado === 'libre').map(h => h.hora);
+  }
+
+  seleccionarHora(hora: string): void {
+    this.nuevaReserva.horaReserva = hora;
+    this.mensajeErrorReserva = '';
   }
 
   get mesasParaReserva(): Mesa[] {
@@ -259,7 +315,8 @@ export class AppComponent implements OnInit {
         const otroFin = otroInicio + Math.max(15, Number(r.servicio?.duracionMinutos) || 60);
         return inicio < otroFin && otroInicio < fin;
       });
-      if (!ocupado) return true;
+      const aprendida = this.ocupadasConocidas.has(this.claveHorario(Number(mesa.id), this.nuevaReserva.fechaReserva, this.horaDesdeMinutos(inicio)));
+      if (!ocupado && !aprendida) return true;
     }
     return false;
   }
@@ -335,11 +392,20 @@ export class AppComponent implements OnInit {
     const rol = this.api.currentUser.rol;
     const prefijo = rol === 'ADMIN' ? 'admin' : rol === 'CLIENTE' ? 'cliente' : 'empleado';
     this.mensajeErrorReserva = '';
-    if (!this.nuevaReserva.fechaReserva || this.nuevaReserva.fechaReserva < this.fechaMinimaReserva) {
-      this.nuevaReserva.fechaReserva = this.fechaMinimaReserva;
-    }
+    this.nuevaReserva.fechaReserva = this.fechaMinimaReserva;
     this.actualizarHorarioSeleccionado();
-    this.router.navigate([`/${prefijo}/reservas`], { queryParams: { nueva: 1 } });
+    if (this.seccionActiva === 'reservas' && !this.publicHomeVisible) {
+      this.modalReservaAbierto = true;
+    } else {
+      this.router.navigate([`/${prefijo}/reservas`], { queryParams: { nueva: 1 } });
+    }
+  }
+
+  cerrarModalReserva(): void {
+    this.modalReservaAbierto = false;
+    if (this.route.snapshot.queryParamMap.has('nueva')) {
+      this.router.navigate([], { queryParams: { nueva: null }, queryParamsHandling: 'merge', replaceUrl: true });
+    }
   }
 
   mostrarExito(msg: string): void {
@@ -388,6 +454,16 @@ export class AppComponent implements OnInit {
       return;
     }
 
+    if (!this.telefonoValido(this.registroForm.telefono, true)) {
+      this.mostrarError('El teléfono es obligatorio: 9 dígitos y empieza con 9.');
+      return;
+    }
+
+    if (!this.passwordValida(this.registroForm.password)) {
+      this.mostrarError('La contraseña no cumple los requisitos de seguridad.');
+      return;
+    }
+
     this.api.registro(this.registroForm).subscribe({
       next: (res) => {
         this.mostrarExito(`Registro exitoso para ${res.user}. Ya puedes iniciar sesión.`);
@@ -406,6 +482,7 @@ export class AppComponent implements OnInit {
     this.mesas = [];
     this.reservas = [];
     this.usuarios = [];
+    this.ocupadasConocidas.clear();
     this.seccionActiva = 'dashboard';
     this.loginVisible = false;
     this.router.navigateByUrl('/inicio');
@@ -547,9 +624,15 @@ export class AppComponent implements OnInit {
       next: (res) => {
         this.mostrarExito(`Reserva confirmada con ticket: ${res.codigoReserva}`);
         this.cargarReservas();
-        this.modalReservaAbierto = false;
+        this.nuevaReserva.observaciones = '';
+        this.cerrarModalReserva();
       },
       error: (err) => {
+        const ocupadoEnServidor = (err?.status === 400 || err?.status === 409) && /ya cuenta con una reserva/i.test(err?.error?.message || '');
+        if (ocupadoEnServidor) {
+          this.ocupadasConocidas.add(this.claveHorario(payload.mesaId, payload.fechaReserva, payload.horaReserva));
+          this.actualizarHorarioSeleccionado();
+        }
         this.mensajeErrorReserva = err?.status === 400 || err?.status === 409
           ? 'Ese horario ya no está disponible. Elige otra hora o mesa e inténtalo nuevamente.'
           : 'No se pudo registrar la reserva. Revisa los datos e inténtalo nuevamente.';
@@ -558,8 +641,59 @@ export class AppComponent implements OnInit {
     });
   }
 
+  estadoAtencion(reserva: ReservaResponse): 'espera' | 'proxima' | 'lista' {
+    const inicio = new Date(`${reserva.fechaReserva}T${reserva.horaReserva.slice(0, 5)}:00`).getTime();
+    const faltan = inicio - Date.now();
+    if (faltan <= 0) return 'lista';
+    return faltan <= this.MINUTOS_PARA_ALISTAR * 60000 ? 'proxima' : 'espera';
+  }
+
+  puedeAtender(reserva: ReservaResponse): boolean {
+    return this.estadoAtencion(reserva) === 'lista';
+  }
+
+  textoAtencion(reserva: ReservaResponse): string {
+    const hora = reserva.horaReserva.slice(0, 5);
+    switch (this.estadoAtencion(reserva)) {
+      case 'lista': return 'Marcar como atendida';
+      case 'proxima': return `Empieza a las ${hora}: ve alistando la mesa`;
+      default: return `Disponible desde el ${reserva.fechaReserva} a las ${hora}`;
+    }
+  }
+
+  limpiarTelefono(input: HTMLInputElement): void {
+    const limpio = input.value.replace(/\D/g, '').slice(0, 9);
+    if (input.value !== limpio) {
+      input.value = limpio;
+      input.dispatchEvent(new Event('input'));
+    }
+  }
+
+  telefonoValido(telefono?: string | null, obligatorio = false): boolean {
+    if (!telefono) return !obligatorio;
+    return /^9\d{8}$/.test(telefono);
+  }
+
+  requisitosPassword(password?: string | null): { texto: string; ok: boolean }[] {
+    const p = password || '';
+    return [
+      { texto: 'Mínimo 8 caracteres', ok: p.length >= 8 },
+      { texto: 'Al menos una mayúscula', ok: /[A-Z]/.test(p) },
+      { texto: 'Al menos un número', ok: /\d/.test(p) },
+      { texto: 'Al menos un carácter especial (!@#$%&*...)', ok: /[^A-Za-z0-9]/.test(p) }
+    ];
+  }
+
+  passwordValida(password?: string | null): boolean {
+    return this.requisitosPassword(password).every(r => r.ok);
+  }
+
   cambiarEstado(id: number, estado: string): void {
     if (!this.esEmpleadoOAdmin()) return this.mostrarError('No tienes permiso para cambiar el estado de reservas.');
+    const reserva = this.reservas.find(r => r.id === id);
+    if (estado === 'ATENDIDA' && reserva && !this.puedeAtender(reserva)) {
+      return this.mostrarError(`Esta reserva está programada para el ${reserva.fechaReserva} a las ${reserva.horaReserva.slice(0, 5)}; solo se puede atender desde esa hora.`);
+    }
     this.api.cambiarEstadoReserva(id, estado).subscribe({
       next: (act) => {
         this.mostrarExito(`Ticket #${act.codigoReserva}: ${act.estado}`);
@@ -585,6 +719,12 @@ export class AppComponent implements OnInit {
 
   crearUsuario(): void {
     if (!this.esAdmin()) return this.mostrarError('Solo administración puede gestionar usuarios.');
+    if (!this.telefonoValido(this.nuevoUsuarioAdmin.telefono, true)) {
+      return this.mostrarError('El teléfono es obligatorio: 9 dígitos y empieza con 9.');
+    }
+    if (!this.passwordValida(this.nuevoUsuarioAdmin.password)) {
+      return this.mostrarError('La contraseña no cumple los requisitos de seguridad.');
+    }
     this.api.crearUsuario(this.nuevoUsuarioAdmin).subscribe({
       next: (res) => {
         this.mostrarExito(`Usuario ${res.user} creado (${res.rol}).`);
@@ -618,6 +758,12 @@ export class AppComponent implements OnInit {
   guardarEdicionUsuario(): void {
     if (!this.esAdmin()) return this.mostrarError('Solo administración puede gestionar usuarios.');
     if (!this.usuarioAEditar || !this.usuarioAEditar.id) return;
+    if (!this.telefonoValido(this.usuarioAEditar.telefono)) {
+      return this.mostrarError('El teléfono debe tener 9 dígitos y empezar con 9.');
+    }
+    if (this.usuarioAEditar.password?.trim() && !this.passwordValida(this.usuarioAEditar.password)) {
+      return this.mostrarError('La nueva contraseña no cumple los requisitos de seguridad.');
+    }
     const payload: any = {
       user: this.usuarioAEditar.user,
       telefono: this.usuarioAEditar.telefono,
@@ -659,6 +805,7 @@ export class AppComponent implements OnInit {
   }
 
   get totalReservas(): number { return this.reservas.length; }
+  contarPorEstado(estado: string): number { return this.reservas.filter(r => r.estado === estado).length; }
   get reservasPendientes(): number { return this.reservas.filter(r => r.estado === 'PENDIENTE').length; }
   get reservasConfirmadas(): number { return this.reservas.filter(r => r.estado === 'CONFIRMADA' || r.estado === 'ATENDIDA').length; }
   get mesasDisponibles(): number { return this.mesas.filter(m => m.estado === 'DISPONIBLE').length; }

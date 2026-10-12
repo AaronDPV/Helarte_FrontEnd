@@ -3,8 +3,14 @@
 <!-- ============================================== -->
 <main *ngIf="!loginVisible && (!api.currentUser || publicHomeVisible)" class="public-site">
   <div class="announcement">PRIMER LUGAR 2D DEL PERÚ <span>·</span> ICE CREAM, CREPES & WAFFLES <span>·</span> DESDE EL 2023</div>
-  <header class="public-header"><a class="brand" href="#inicio"><img src="assets/logo-helarte.png" alt="H-elarte"></a><nav><a href="#experiencias">Conócenos</a><a href="#menu">Explora nuestro menú</a><a href="#sedes">Nuestras sedes</a></nav><button class="account-button" (click)="abrirLogin()">Mi cuenta <span>↗</span></button></header>
+  <header class="public-header"><a class="brand" href="#inicio"><img src="assets/logo-helarte.png" alt="H-elarte"></a><nav><a href="#experiencias">Conócenos</a><a href="#menu">Explora nuestro menú</a><a href="#promos">Promos</a><a href="#sedes">Nuestras sedes</a></nav><button class="account-button" (click)="abrirLogin()">Mi cuenta <span>↗</span></button></header>
   <section class="hero" id="inicio"><div class="hero-copy"><span class="eyebrow">DESDE EL 2023</span><h1>Bienvenidos<br>a H-elarte</h1><p>Un espacio temático 2D, con diseños y pinturas hechos a mano. Aquí se encuentran el arte visual y el gastronómico.</p><p class="hero-small">Helados artesanales, crepes y waffles para disfrutar en familia y con amigos.</p><div class="hero-actions"><a href="#menu" class="primary-button">Ver menú</a><button class="secondary-button" (click)="abrirReservaPublica()">Reservar una mesa</button></div></div><div class="hero-art"><img src="assets/local-2d-interior.png" alt="Ambientes dibujados a mano de H-elarte"></div></section>
+  <section class="info-strip" aria-label="Datos de H-elarte">
+    <article><strong>1.er lugar</strong><span>Espacio 2D del Perú</span></article>
+    <article><strong>3 sedes</strong><span>Surco, Miraflores y San Borja</span></article>
+    <article><strong>7 días</strong><span>Abierto de lunes a domingo</span></article>
+    <article><strong>A mano</strong><span>Diseños y pinturas hechos a mano</span></article>
+  </section>
   <section class="experience" id="experiencias">
     <div class="experience-intro">
       <span class="eyebrow">H-ELARTE · DESDE EL 2023</span>
@@ -19,12 +25,59 @@
       <article><span>03 · TU MOMENTO</span><h3>Ven a disfrutarlo</h3><p>Elige la fecha y hora de tu visita y solicita una mesa.</p><button class="text-link visit-link" (click)="abrirReservaPublica()">Reservar mesa →</button></article>
     </div>
   </section>
-  <section class="menu-section" id="menu"><div class="menu-heading"><span class="eyebrow">ALGO PARA TODOS LOS GUSTOS</span><h2>Explora nuestro menú</h2><p>Waffles, crepes, postres y helados artesanales para disfrutar en cualquier momento.</p></div><div class="menu-grid"><article class="menu-item"><img src="assets/menu-waffles.png" alt="Waffles dulces y salados de H-elarte"><h3>Waffles</h3><small>Dulces y salados</small></article><article class="menu-item"><img src="assets/menu-crepes.png" alt="Crepes dulces y salados de H-elarte"><h3>Crepes</h3><small>Dulces y salados</small></article><article class="menu-item"><img src="assets/menu-pancakes.png" alt="Pancakes de H-elarte"><h3>Pancakes</h3><small>Recién hechos</small></article><article class="menu-item"><img src="assets/menu-helados.png" alt="Helados artesanales de H-elarte"><h3>Helados</h3><small>Artesanales</small></article></div></section>
-  <section class="visit-section" id="sedes">
-    <div class="visit-photo"><img src="assets/local-2d-interior.png" alt="Ambientes ilustrados de H-elarte"><span>UNA EXPERIENCIA<br>FUERA DE LO COMÚN</span></div>
-    <div class="visit-copy"><span class="eyebrow">TE ESPERAMOS TODOS LOS DÍAS</span><h2>Tu próxima visita empieza aquí</h2><p>Ven por algo dulce, celebra una ocasión especial o comparte un momento diferente.</p><div class="branch-hours"><article><strong>Surco</strong><span>10:30 a. m. – 10:00 p. m.</span></article><article><strong>Miraflores · San Borja</strong><span>8:00 a. m. – 10:00 p. m.</span></article></div><button class="primary-button" (click)="abrirReservaPublica()">Reservar una mesa</button></div>
+  <section class="menu-section" id="menu"><div class="menu-heading"><span class="eyebrow">ALGO PARA TODOS LOS GUSTOS</span><h2>Explora nuestro menú</h2><p>Waffles, crepes, postres y helados artesanales para disfrutar en cualquier momento.</p></div><div class="menu-grid"><article class="menu-item"><img src="assets/menu-waffles.png" alt="Waffles dulces y salados de H-elarte"><h3>Waffles</h3><small>Dulces y salados</small></article><article class="menu-item"><img src="assets/menu-crepes.png" alt="Crepes dulces y salados de H-elarte"><h3>Crepes</h3><small>Dulces y salados</small></article><article class="menu-item"><img src="assets/menu-pancakes.png" alt="Pancakes de H-elarte"><h3>Pancakes</h3><small>Recién hechos</small></article><article class="menu-item"><img src="assets/menu-helados.png" alt="Helados artesanales de H-elarte"><h3>Helados</h3><small>Artesanales</small></article><article class="menu-item"><img src="assets/menu-postres.png" alt="Postres y tortas de H-elarte"><h3>Postres</h3><small>Tortas y porciones</small></article><article class="menu-item"><img src="assets/menu-burgers.png" alt="Burgers de H-elarte"><h3>Burgers</h3><small>Con papas fritas</small></article><article class="menu-item"><img src="assets/menu-ensaladas.png" alt="Ensaladas de H-elarte"><h3>Ensaladas</h3><small>Frescas y completas</small></article><article class="menu-item"><img src="assets/menu-cafes.png" alt="Cafés de H-elarte"><h3>Cafés</h3><small>Calientes y fríos</small></article></div><p class="menu-cta">¿Prefieres pedir desde casa? <a href="https://www.helarte.com.pe/pedir" target="_blank" rel="noopener">Haz tu pedido en línea →</a></p></section>
+
+  <section class="favorites-section" id="favoritos">
+    <div class="section-heading"><span class="eyebrow">LOS MÁS PEDIDOS</span><h2>Favoritos de la casa</h2><p>Algunas de las creaciones que más se disfrutan en la mesa. Precios referenciales.</p></div>
+    <div class="favorites-grid">
+      <article class="favorite-card" *ngFor="let plato of platosDestacados">
+        <span class="favorite-tag">{{ plato.categoria }}</span>
+        <h3>{{ plato.nombre }}</h3>
+        <p>{{ plato.descripcion }}</p>
+        <strong class="favorite-price">S/ {{ plato.precio | number:'1.2-2' }}</strong>
+      </article>
+    </div>
   </section>
-  <footer class="public-footer"><img src="assets/logo-helarte.png" alt="H-elarte"><span>Surco · Miraflores · San Borja · De lunes a domingo</span><button (click)="abrirLogin()">Iniciar sesión</button></footer>
+
+  <section class="promos-section" id="promos">
+    <div class="section-heading"><span class="eyebrow">PARA COMPARTIR</span><h2>Promociones</h2><p>Combos pensados para venir en pareja, en familia o con amigos.</p></div>
+    <div class="promos-grid">
+      <article class="promo-card" *ngFor="let promo of promociones">
+        <span class="promo-badge">-{{ promo.descuento }}%</span>
+        <h3>{{ promo.nombre }}</h3>
+        <p>{{ promo.detalle }}</p>
+        <div class="promo-prices"><strong>S/ {{ promo.precio | number:'1.2-2' }}</strong><s>S/ {{ promo.antes | number:'1.2-2' }}</s></div>
+      </article>
+    </div>
+  </section>
+
+  <section class="sedes-section" id="sedes">
+    <div class="section-heading"><span class="eyebrow">VISÍTANOS</span><h2>Nuestras sedes</h2><p>Atendemos de lunes a domingo en tres distritos de Lima.</p></div>
+    <div class="sedes-grid">
+      <article class="sede-card" *ngFor="let sede of sedes">
+        <h3>{{ sede.nombre }}</h3>
+        <ul>
+          <li><span>Dirección</span>{{ sede.direccion }}</li>
+          <li><span>Horario</span>{{ sede.horario }}</li>
+          <li><span>Teléfono</span><a [href]="'tel:' + telefonoLocal.replace(' ', '')">{{ telefonoLocal }}</a></li>
+        </ul>
+        <a class="text-link" [href]="sede.mapa" target="_blank" rel="noopener">Cómo llegar →</a>
+      </article>
+    </div>
+  </section>
+  <section class="visit-section" id="reservar">
+    <div class="visit-photo"><img src="assets/local-2d-interior.png" alt="Ambientes ilustrados de H-elarte"><span>UNA EXPERIENCIA<br>FUERA DE LO COMÚN</span></div>
+    <div class="visit-copy"><span class="eyebrow">TE ESPERAMOS TODOS LOS DÍAS</span><h2>Tu próxima visita empieza aquí</h2><p>Ven por algo dulce, celebra una ocasión especial o comparte un momento diferente.</p><ol class="reserva-pasos"><li><strong>Ingresa a tu cuenta</strong><span>Inicia sesión o regístrate en menos de un minuto.</span></li><li><strong>Elige día, hora y mesa</strong><span>Solo verás los horarios disponibles para tu grupo.</span></li><li><strong>Recibe tu confirmación</strong><span>El equipo confirma tu reserva y obtienes tu código de ticket.</span></li></ol><button class="primary-button" (click)="abrirReservaPublica()">Reservar una mesa</button></div>
+  </section>
+  <footer class="site-footer">
+    <div class="site-footer-grid">
+      <div class="footer-brand"><img src="assets/logo-helarte.png" alt="H-elarte"><p>Primer lugar 2D del Perú. Ice cream, crepes &amp; waffles en un espacio lleno de arte.</p></div>
+      <div><h4>Conócenos</h4><a href="#experiencias">Nuestra historia</a><a href="#menu">Menú</a><a href="#promos">Promociones</a><a href="#sedes">Sedes</a></div>
+      <div><h4>Contacto</h4><a [href]="'tel:' + telefonoLocal.replace(' ', '')">{{ telefonoLocal }}</a><span>De lunes a domingo</span><a href="https://www.instagram.com/helarte.pe/" target="_blank" rel="noopener">Instagram @helarte.pe</a></div>
+      <div><h4>Información</h4><a href="https://www.helarte.com.pe/documentos-legales/termsAndConditions" target="_blank" rel="noopener">Términos y condiciones</a><a href="https://www.helarte.com.pe/documentos-legales/privacy" target="_blank" rel="noopener">Política de privacidad</a><a href="https://www.helarte.com.pe/reclamos" target="_blank" rel="noopener">Libro de reclamaciones</a></div>
+    </div>
+    <div class="site-footer-bottom"><span>© 2026 H-elarte · Surco · Miraflores · San Borja</span><button (click)="abrirLogin()">Iniciar sesión</button></div>
+  </footer>
 </main>
 
 <div *ngIf="!api.currentUser && loginVisible" class="login-wrapper-2d">
@@ -95,12 +148,14 @@
 
       <div class="form-field-2d">
         <label>Contraseña:</label>
-        <input type="password" [(ngModel)]="registroForm.password" name="regPass" placeholder="Mínimo 6 caracteres" class="input-2d" required />
+        <input type="password" [(ngModel)]="registroForm.password" name="regPass" placeholder="Mínimo 8 caracteres" class="input-2d" required />
+        <ul class="password-rules"><li *ngFor="let q of requisitosPassword(registroForm.password)" [class.ok]="q.ok">{{ q.ok ? '✓' : '✗' }} {{ q.texto }}</li></ul>
       </div>
 
       <div class="form-field-2d">
         <label>Teléfono:</label>
-        <input type="text" [(ngModel)]="registroForm.telefono" name="regTel" placeholder="987654321" class="input-2d" />
+        <input type="tel" inputmode="numeric" maxlength="9" [(ngModel)]="registroForm.telefono" name="regTel" placeholder="987654321" class="input-2d" required (input)="limpiarTelefono($any($event.target))" />
+        <small class="field-note-error" *ngIf="!telefonoValido(registroForm.telefono)">Debe tener 9 dígitos y empezar con 9.</small>
       </div>
 
       <button type="submit" class="btn-login-2d">Registrarme e Ingresar</button>
@@ -287,10 +342,10 @@
           <label>Filtrar por estado:</label>
           <div class="filter-pills">
             <button class="pill-2d" [class.activo]="filtroEstadoReserva === 'TODAS'" (click)="filtroEstadoReserva = 'TODAS'">Todas ({{ totalReservas }})</button>
-            <button class="pill-2d" [class.activo]="filtroEstadoReserva === 'PENDIENTE'" (click)="filtroEstadoReserva = 'PENDIENTE'">Pendientes ({{ reservasPendientes }})</button>
-            <button class="pill-2d" [class.activo]="filtroEstadoReserva === 'CONFIRMADA'" (click)="filtroEstadoReserva = 'CONFIRMADA'">Confirmadas</button>
-            <button class="pill-2d" [class.activo]="filtroEstadoReserva === 'ATENDIDA'" (click)="filtroEstadoReserva = 'ATENDIDA'">Atendidas</button>
-            <button class="pill-2d" [class.activo]="filtroEstadoReserva === 'CANCELADA'" (click)="filtroEstadoReserva = 'CANCELADA'">Canceladas</button>
+            <button class="pill-2d" [class.activo]="filtroEstadoReserva === 'PENDIENTE'" (click)="filtroEstadoReserva = 'PENDIENTE'">Pendientes ({{ contarPorEstado('PENDIENTE') }})</button>
+            <button class="pill-2d" [class.activo]="filtroEstadoReserva === 'CONFIRMADA'" (click)="filtroEstadoReserva = 'CONFIRMADA'">Confirmadas ({{ contarPorEstado('CONFIRMADA') }})</button>
+            <button class="pill-2d" [class.activo]="filtroEstadoReserva === 'ATENDIDA'" (click)="filtroEstadoReserva = 'ATENDIDA'">Atendidas ({{ contarPorEstado('ATENDIDA') }})</button>
+            <button class="pill-2d" [class.activo]="filtroEstadoReserva === 'CANCELADA'" (click)="filtroEstadoReserva = 'CANCELADA'">Canceladas ({{ contarPorEstado('CANCELADA') }})</button>
           </div>
         </div>
 
@@ -306,7 +361,7 @@
             <colgroup><col class="col-ticket"><col class="col-client"><col class="col-table"><col class="col-service"><col class="col-date"><col class="col-guests"><col class="col-state"><col class="col-actions"></colgroup>
             <thead><tr><th>Ticket</th><th>Cliente</th><th>Mesa y zona</th><th class="hide-tablet">Servicio</th><th>Fecha y hora</th><th class="hide-phone">Comensales</th><th>Estado</th><th>Acciones</th></tr></thead>
             <tbody>
-              <tr *ngFor="let r of reservasFiltradas">
+              <tr *ngFor="let r of reservasFiltradas" [class.fila-por-iniciar]="r.estado === 'CONFIRMADA' && estadoAtencion(r) === 'proxima'">
                 <td data-label="Ticket"><strong class="ticket-code-2d">{{ r.codigoReserva }}</strong></td>
                 <td data-label="Cliente"><strong>{{ r.usuario.user }}</strong><small class="text-muted client-email">{{ r.usuario.email }}</small></td>
                 <td data-label="Mesa y zona">Mesa #{{ r.mesa.numeroMesa }}<small>{{ r.mesa.ubicacion }}</small></td>
@@ -316,7 +371,7 @@
                 <td data-label="Estado"><span class="badge-status-2d" [ngClass]="'status-' + r.estado.toLowerCase()">{{ r.estado }}</span></td>
                 <td data-label="Acciones" class="action-buttons-cell">
                   <button *ngIf="esEmpleadoOAdmin() && r.estado === 'PENDIENTE'" class="btn-action-2d btn-confirmar" (click)="cambiarEstado(r.id, 'CONFIRMADA')">✓ Confirmar</button>
-                  <button *ngIf="esEmpleadoOAdmin() && r.estado === 'CONFIRMADA'" class="btn-action-2d btn-atender" (click)="cambiarEstado(r.id, 'ATENDIDA')">★ Atendida</button>
+                  <button *ngIf="esEmpleadoOAdmin() && r.estado === 'CONFIRMADA'" class="btn-action-2d btn-atender" [class.btn-alistar]="estadoAtencion(r) === 'proxima'" [disabled]="!puedeAtender(r)" [title]="textoAtencion(r)" (click)="cambiarEstado(r.id, 'ATENDIDA')">{{ estadoAtencion(r) === 'proxima' ? '⏳ Alistar mesa' : '★ Atendida' }}</button>
                   <button *ngIf="r.estado !== 'CANCELADA' && r.estado !== 'ATENDIDA'" class="btn-action-2d btn-cancelar" (click)="cancelarReserva(r.id)">✕ Cancelar</button>
                 </td>
               </tr>
@@ -442,7 +497,7 @@
     <div class="modal-card-2d">
       <div class="modal-header-2d">
         <h3>+ Nueva Reserva</h3>
-        <button class="modal-close-btn" (click)="modalReservaAbierto = false">✕</button>
+        <button class="modal-close-btn" (click)="cerrarModalReserva()">✕</button>
       </div>
       <form (ngSubmit)="crearReserva()">
         <div *ngIf="mensajeErrorReserva" class="reservation-error" role="alert" aria-live="assertive">⚠ {{ mensajeErrorReserva }}</div>
@@ -469,18 +524,18 @@
             <input type="date" [(ngModel)]="nuevaReserva.fechaReserva" [min]="fechaMinimaReserva" (ngModelChange)="actualizarHorarioSeleccionado()" name="fechaReserva" class="input-2d" required />
           </div>
           <div class="form-group-2d">
-            <label>Hora:</label>
-            <select [(ngModel)]="nuevaReserva.horaReserva" (ngModelChange)="mensajeErrorReserva = ''" name="horaReserva" class="input-2d" required [disabled]="horariosDisponibles.length === 0">
-              <option value="" disabled>Selecciona un horario</option>
-              <option *ngFor="let hora of horariosDisponibles" [value]="hora">{{ hora }}</option>
-            </select>
-            <small>Atención estimada: {{ duracionSeleccionada }} min · hasta {{ horaFinSeleccionada }}</small>
-          </div>
-          <div class="form-group-2d">
             <label>Personas:</label>
             <input type="number" [(ngModel)]="nuevaReserva.cantidadPersonas" (ngModelChange)="actualizarHorarioSeleccionado()" name="cantidadPersonas" min="1" max="20" class="input-2d" required />
           </div>
-          <div class="form-group-2d">
+          <div class="form-group-2d full-width">
+            <label>Hora:</label>
+            <div class="time-grid" role="group" aria-label="Horarios de la reserva">
+              <button type="button" *ngFor="let h of horariosDelDia" class="time-chip" [class.seleccionado]="nuevaReserva.horaReserva === h.hora && h.estado === 'libre'" [class.ocupada]="h.estado === 'ocupada'" [class.pasada]="h.estado === 'pasada'" [disabled]="h.estado !== 'libre'" [title]="h.estado === 'libre' ? 'Disponible' : h.estado === 'ocupada' ? 'Ya reservado' : 'Hora pasada'" (click)="seleccionarHora(h.hora)">{{ h.hora }}</button>
+            </div>
+            <div class="time-legend"><span class="lg libre">Disponible</span><span class="lg ocupada">Ocupado</span><span class="lg pasada">Hora pasada</span></div>
+            <small>Atención estimada: {{ duracionSeleccionada }} min · hasta {{ horaFinSeleccionada }}</small>
+          </div>
+          <div class="form-group-2d full-width">
             <label>Observaciones:</label>
             <input type="text" [(ngModel)]="nuevaReserva.observaciones" name="observaciones" placeholder="Opcional" class="input-2d" />
           </div>
@@ -488,7 +543,7 @@
         <div *ngIf="horariosDisponibles.length === 0" class="reservation-error" role="status">No hay horarios disponibles para esta mesa en la fecha seleccionada.</div>
         <p *ngIf="esCliente()" class="availability-note">Tu solicitud quedará pendiente hasta que el equipo de Helarte la confirme. Los horarios mostrados no reemplazan esa confirmación.</p>
         <div class="modal-footer-2d">
-          <button type="button" class="btn-2d btn-2d-white" (click)="modalReservaAbierto = false">Cancelar</button>
+          <button type="button" class="btn-2d btn-2d-white" (click)="cerrarModalReserva()">Cancelar</button>
           <button type="submit" class="btn-2d btn-2d-black" [disabled]="mesasParaReserva.length === 0 || !nuevaReserva.mesaId || !nuevaReserva.horaReserva">Confirmar Reserva</button>
         </div>
       </form>
@@ -583,6 +638,7 @@
           <div class="form-group-2d">
             <label>Contraseña:</label>
             <input type="password" [(ngModel)]="nuevoUsuarioAdmin.password" name="password" class="input-2d" required />
+            <ul class="password-rules"><li *ngFor="let q of requisitosPassword(nuevoUsuarioAdmin.password)" [class.ok]="q.ok">{{ q.ok ? '✓' : '✗' }} {{ q.texto }}</li></ul>
           </div>
           <div class="form-group-2d">
             <label>Rol:</label>
@@ -591,6 +647,11 @@
               <option value="EMPLEADO">EMPLEADO</option>
               <option value="ADMIN">ADMIN</option>
             </select>
+          </div>
+          <div class="form-group-2d">
+            <label>Teléfono:</label>
+            <input type="tel" inputmode="numeric" maxlength="9" [(ngModel)]="nuevoUsuarioAdmin.telefono" name="telefono" placeholder="987654321" class="input-2d" required (input)="limpiarTelefono($any($event.target))" />
+            <small class="field-note-error" *ngIf="!telefonoValido(nuevoUsuarioAdmin.telefono)">Debe tener 9 dígitos y empezar con 9.</small>
           </div>
         </div>
         <div class="modal-footer-2d">
@@ -628,7 +689,8 @@
           </div>
           <div class="form-group-2d">
             <label>Teléfono:</label>
-            <input type="text" [(ngModel)]="usuarioAEditar.telefono" name="editTel" class="input-2d" />
+            <input type="tel" inputmode="numeric" maxlength="9" [(ngModel)]="usuarioAEditar.telefono" name="editTel" class="input-2d" (input)="limpiarTelefono($any($event.target))" />
+            <small class="field-note-error" *ngIf="!telefonoValido(usuarioAEditar.telefono)">Debe tener 9 dígitos y empezar con 9.</small>
           </div>
           <div class="form-group-2d">
             <label>Estado de la cuenta:</label>
@@ -640,6 +702,7 @@
           <div class="form-group-2d">
             <label>Nueva Contraseña (Opcional):</label>
             <input type="password" [(ngModel)]="usuarioAEditar.password" name="editPassword" placeholder="Dejar en blanco para no cambiar" class="input-2d" />
+            <ul class="password-rules" *ngIf="usuarioAEditar.password"><li *ngFor="let q of requisitosPassword(usuarioAEditar.password)" [class.ok]="q.ok">{{ q.ok ? '✓' : '✗' }} {{ q.texto }}</li></ul>
           </div>
         </div>
         <div class="modal-footer-2d">
